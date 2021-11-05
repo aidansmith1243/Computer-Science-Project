@@ -1,0 +1,9 @@
+.GameSelection {
+    background-color: green;
+    height: 100%;
+    width: calc(100% - 150px);
+    position: fixed;
+    top: 40px;
+    left: 150px;
+    padding-top: 20px;
+}

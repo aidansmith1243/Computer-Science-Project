@@ -1,0 +1,9 @@
+.FriendList {
+    height: calc(100% - 20px);
+    width: 150px;
+    position: fixed;
+    top: 40px;
+    left: 0;
+    padding-top: 20px;
+    background-color: gray;
+};
