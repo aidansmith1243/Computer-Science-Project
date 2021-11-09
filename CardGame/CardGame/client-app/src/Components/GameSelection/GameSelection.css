@@ -10,10 +10,9 @@
 .flex-container {
     display: flex;
     flex-flow: row wrap;
-    justify-content: space-around;
-    align-content: space-around;
+    justify-content: 20px;
     margin-left: 20px;
     row-gap: 20px;
     column-gap: 20px;
-    min-width: 200px;
+    min-width: 150px;
 }
