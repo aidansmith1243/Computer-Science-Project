@@ -1,14 +1,23 @@
 import Card from '../Card/Card';
+import GameCard from '../GameCard/GameCard';
 import './GameSelection.css';
 const GameSelection = () => {
     return ( 
     <div className='GameSelection'>
-        <Card suit={'S'} rank={'8'} position={{x: 0, y: 0}}/>
-        <Card suit={'H'} rank={'Q'} position={{x: 25, y: 0}}/>
-        <Card suit={'C'} rank={'4'} position={{x: 196, y: 0}}/>
-        <Card suit={'D'} rank={'A'} position={{x: 221, y: 0}}/>
-        <Card suit={'S'} rank={'10'} position={{x: 221, y: 40}}/>
-        <Card position={{x: 400, y: 40}}/>
+        <div className='flex-container'>
+            <GameCard 
+                title='Hearts'
+                link='/Hearts'
+                info='https://en.wikipedia.org/wiki/Hearts_(card_game)'
+                players='4'
+            />
+            <GameCard 
+                title='Crazy Eights'
+                link='/Crazy_Eights'
+                info='https://en.wikipedia.org/wiki/Crazy_Eights'
+                players='2+'
+            />
+        </div>
     </div> 
     );
 }
