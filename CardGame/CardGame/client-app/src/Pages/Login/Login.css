@@ -1,0 +1,18 @@
+.LoginPage {
+    background-color: green;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+}
+input {
+    display: block;
+}
+
+form {
+    padding: 30px;
+    margin: auto;
+    background-color: gray;
+    width: 200px;
+    justify-content: center;
+    margin-top: 30%;
+}
