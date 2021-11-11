@@ -1,9 +1,19 @@
-const InviteModal = () => {
+import { Modal } from 'react-bootstrap';
+import './InviteModal.css';
+
+const InviteModal = (props) => {
+    const {style} = props;
     return ( 
-        <div>
+        <Modal
+            show={true}
+            centered
             
-        </div>
-     );
+        >
+            <Modal.Header>Hi</Modal.Header>
+            <Modal.Body>asdfasdf</Modal.Body>
+            <Modal.Footer>This is the footer</Modal.Footer>
+        </Modal>
+    );
 }
  
 export default InviteModal;
