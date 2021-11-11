@@ -44,6 +44,11 @@
     right: 5px;
     bottom: 13px;
 }
+
+.CardSideways {
+    transform: rotate(-90deg);
+}
+
 .noselect {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */

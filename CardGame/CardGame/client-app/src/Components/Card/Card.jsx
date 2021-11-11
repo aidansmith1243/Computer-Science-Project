@@ -1,6 +1,6 @@
 import './Card.css';
 const Card = (props) => {
-    const {suit, rank, position} = props;
+    const {suit, rank, position, className} = props;
     // Suits: H, D, S, C
     // Ranks: A,2,3,4,5,6,7,8,9,10,J,Q,K
     const visible = suit !== undefined && rank !== undefined;
@@ -21,7 +21,7 @@ const Card = (props) => {
             break;
     }
     return ( 
-    <div className='Card' style={{top: position.y, left: position.x}}>
+    <div className={className !== undefined ? 'Card ' + className : 'Card'} style={{top: position.y, left: position.x}}>
         {visible ? 
         <div>
             <p className='Rank noselect' style={{color: color, fontWeight: 'bold'}}>{rank}</p>
