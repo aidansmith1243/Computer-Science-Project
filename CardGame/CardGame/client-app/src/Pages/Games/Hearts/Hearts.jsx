@@ -2,6 +2,7 @@ import { position } from 'dom-helpers';
 import Card from '../../../Components/Card/Card';
 import TopBar from '../../../Components/TopBar/Topbar';
 import './Hearts.css';
+import Draggable from 'react-draggable';
 
 const Hearts = () => {
     const my_hand = [
@@ -38,12 +39,13 @@ const Hearts = () => {
         for(let i = 0; i < cards.length; i++)
         {
             cardElements.push(
+                <Draggable><div>
                 <Card 
                     key={Math.random()}
                     className={sideways ? 'CardSideways':''}
                     suit={cards[i].suit} rank={cards[i].rank} 
                     position={{x: mod_x, y: mod_y}}
-                />
+                /></div></Draggable>
             )
             sideways ? mod_y += 40 : mod_x += 40;
         }
@@ -55,10 +57,12 @@ const Hearts = () => {
     <div className='Hearts'>
         <TopBar/>
         <div className='Board'>
+            
             {createFacingHand(600,700,my_hand)}
             {createFacingHand(50,200,op1_hand,true)}
             {createFacingHand(600,50,op2_hand)}
             {createFacingHand(1200,200,op3_hand,true)}
+            {/* <Draggable><div><Card suit={'S'} rank={'8'} position={{x: 0, y: 0}}/></div></Draggable> */}
             {/* <Card suit={'S'} rank={'8'} position={{x: 0, y: 0}}/>
             <Card suit={'H'} rank={'Q'} position={{x: 25, y: 0}}/>
             <Card suit={'C'} rank={'4'} position={{x: 196, y: 0}}/>

@@ -28,7 +28,7 @@
 }
 .Card .LargeSuit {
     font-size: 70px;
-    padding-top: 20px;
+    padding-top: 10px;
 }
 .Card .RankUpsideDown {
     transform: rotate(-180deg);

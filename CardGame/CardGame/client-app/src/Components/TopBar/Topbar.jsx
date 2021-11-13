@@ -3,6 +3,7 @@ import './TopBar.css';
 const title_style =
 {
     margin: '0',
+    fontSize: '30px',
 };
 
 const TopBar = () => {
@@ -15,5 +16,4 @@ const TopBar = () => {
     );
 }
  
-export default TopBar;<div>
-</div>
+export default TopBar;
