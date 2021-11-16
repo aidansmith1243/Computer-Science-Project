@@ -1,4 +1,5 @@
 ﻿using CardGame.Models.Database;
+using CryptoHelper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,14 @@ namespace CardGame.Models
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)
                 .IsUnique();
+            /*modelBuilder.Entity<User>()
+                .HasData(new User
+                {
+                    UserId = Guid.NewGuid(),
+                    Username = "admin",
+                    Email = "temp@temp.com",
+                    Password = Crypto.HashPassword("root")
+                });*/
         }
     }
 }

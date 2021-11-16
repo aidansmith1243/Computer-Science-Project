@@ -55,18 +55,21 @@ namespace CardGame
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
             app.UseRouting();
+
             app.UseCors(options => options
-                .WithOrigins(new []{ "http://localhost:60230","https://localhost:5001","http://localhost:5000", "http://localhost:44390" })
+                .WithOrigins("https://localhost:60230", "http://localhost:60230", "https://localhost:5001", "http://localhost:5000", "https://localhost:44390", "http://localhost:44390", "https://localhost:44390", "http://localhost:3000")
+                /*.AllowAnyOrigin()*/
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials()
                 );
             app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -81,6 +84,7 @@ namespace CardGame
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+
         }
     }
 }

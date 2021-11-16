@@ -2,10 +2,12 @@ import FriendList from "../../Components/FriendList/FriendList";
 import GameSelection from "../../Components/GameSelection/GameSelection";
 import TopBar from "../../Components/TopBar/Topbar";
 
-const Main = () => {
+const Main = (props) => {
+    const user = props.user;
+
     return (
         <div>
-            <TopBar/>
+            <TopBar user={user}/>
             <FriendList/>
             <GameSelection/>
         </div>

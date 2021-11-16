@@ -45,10 +45,11 @@ namespace CardGame.Controllers
         {
             Console.WriteLine("POST: login");
             var user = _cardGameRepository.GetUserByUsername(dto.Username);
-            if (user == null) return BadRequest(new { message = "Invalid Credentials" });
+            //if (user == null) return BadRequest(new { message = "Invalid Credentials" });
 
             if (user == null || !Crypto.VerifyHashedPassword(user.Password, dto.Password))
             {
+                Console.WriteLine("wrong", user);
                 return BadRequest(new { message = "Invalid Credentials" });
             }
 

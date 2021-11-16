@@ -6,12 +6,16 @@ const title_style =
     fontSize: '30px',
 };
 
-const TopBar = () => {
+const TopBar = (props) => {
+    const user = props.user;
     return (
     <div className='TopBar'>
         <h1 className='Title' style={title_style}>
             Card Player
         </h1>
+        <p>
+            Hi {user}
+        </p>
     </div>  
     );
 }
