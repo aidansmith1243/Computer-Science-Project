@@ -12,6 +12,11 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using CardGame.Controllers;
 using CardGame.Services;
+using CardGame.Hubs;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace CardGame
 {
@@ -30,7 +35,7 @@ namespace CardGame
             services.AddCors();
             services.AddControllersWithViews();
             services.AddDbContext<CardGameContext>(options => options.UseInMemoryDatabase("TempDB"));
-
+            services.AddSignalR();
 
             services.AddScoped<JwtService>();
             services.AddScoped<CardGameRepository>();
@@ -39,6 +44,45 @@ namespace CardGame
             {
                 configuration.RootPath = "client-app/build";
             });
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    //LifetimeValidator = (before, expires, token, parameters) =>
+                    //expires > DateTime.UtcNow,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    /*ValidIssuer = Configuration["Jwt:Issuer"],
+                    ValidAudience = Configuration["Jwt:Issuer"],*/
+                    IssuerSigningKey = new SymmetricSecurityKey
+                    (Encoding.UTF8.GetBytes
+                    (Configuration["Jwt:Key"])),
+                    NameClaimType = ClaimTypes.NameIdentifier
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Cookies["access_token"];
+                        if (!string.IsNullOrEmpty(accessToken))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(JwtBearerDefaults.AuthenticationScheme, policy =>
+                {
+                    policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
+                    policy.RequireClaim(ClaimTypes.NameIdentifier);
+                });
+            });
+            /*services.AddSession();*/
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,6 +99,17 @@ namespace CardGame
                 app.UseHsts();
             }
 
+            /*app.UseSession();
+            app.Use(async (context, next) => 
+            {
+                var token = context.Session.GetString("Token");
+                if (!string.IsNullOrEmpty(token))
+                {
+                    context.Request.Headers.Add("Authorization", "Bearer " + token);
+                }
+                await next();
+            });*/
+
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
@@ -69,10 +124,12 @@ namespace CardGame
                 .AllowCredentials()
                 );
             app.UseAuthorization();
-
+            app.UseAuthentication();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<FriendHub>("/Friend");
             });
 
             app.UseSpa(spa =>

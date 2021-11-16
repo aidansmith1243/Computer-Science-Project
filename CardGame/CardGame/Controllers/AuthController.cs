@@ -8,6 +8,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using CryptoHelper;
 using CardGame.Services;
+using System.Net;
+using Microsoft.AspNetCore.Server.HttpSys;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -55,17 +60,33 @@ namespace CardGame.Controllers
 
             var jwt = _jwtService.Generate(user.UserId);
 
-            Response.Cookies.Append("jwt", jwt, new Microsoft.AspNetCore.Http.CookieOptions
+            Response.Cookies.Append("access_token", jwt, new Microsoft.AspNetCore.Http.CookieOptions
             {
-                HttpOnly = true
+                HttpOnly = true,
+                SameSite = SameSiteMode.None,
+                Secure = true
             });
 
             return Ok(new
             {
-                message = "success"
+                message = "success",
+                auth=jwt
             });
         }
 
-        
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPost("temp")]
+        public IActionResult Temp()
+        {
+            Console.WriteLine($"Cookie= {Request.Cookies["access_token"]}");
+            Console.WriteLine($"Cookie Name= {_cardGameRepository.GetUserById(User.Identity.Name).Username}");
+
+            return Ok(new
+            {
+                message = "complete"
+            });
+        }
+
+
     }
 }

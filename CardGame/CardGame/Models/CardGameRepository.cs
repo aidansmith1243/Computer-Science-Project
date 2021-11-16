@@ -29,7 +29,6 @@ namespace CardGame.Models
 
         public User CreateUser(User user)
         {
-            Console.WriteLine("Creating user: " + user.Username);
             _context.User.Add(user);
             _context.SaveChanges();
             return user;
@@ -37,11 +36,11 @@ namespace CardGame.Models
         }
         public User GetUserByUsername(string username)
         {
-            Console.WriteLine("Retrieving user: " + username);
-            Console.WriteLine("all users: ");
-            foreach (var i in _context.User.ToList())
-                Console.WriteLine(i);
             return _context.User.Where(u => u.Username == username).FirstOrDefault();
+        }
+        public User GetUserById(string guid)
+        {
+            return _context.User.Where(u => u.UserId.ToString() == guid).FirstOrDefault();
         }
     }
 }

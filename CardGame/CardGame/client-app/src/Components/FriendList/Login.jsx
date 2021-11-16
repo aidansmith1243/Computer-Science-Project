@@ -12,10 +12,9 @@ const Login = (props) => {
         e.preventDefault();
 
         await fetch('http://localhost:60230/auth/login/',{
-            headers: {'Content-Type': 'application/json',
-                "Access-Control-Allow-Origin": "http://localhost:60230"},
             method: 'POST',
-            credentials: 'include',
+            headers: {'Content-Type': 'application/json',
+                "Access-Control-Allow-Origin": "*"},
             body: JSON.stringify(
                 {
                     username,
@@ -33,7 +32,7 @@ const Login = (props) => {
             return response.json();
         })
         .then((data) => {
-            console.log(data)
+            cookies.save("",data.auth);
         })
         .catch(err => {
             console.log(err);
