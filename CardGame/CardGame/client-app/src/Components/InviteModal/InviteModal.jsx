@@ -1,17 +1,17 @@
 import { Modal } from 'react-bootstrap';
 import './InviteModal.css';
+import {useNavigate} from 'react-router-dom';
 
 const InviteModal = (props) => {
     const {style} = props;
+    const navigate = useNavigate();
     return ( 
         <Modal
-            show={true}
             centered
-            
         >
-            <Modal.Header>Hi</Modal.Header>
-            <Modal.Body>asdfasdf</Modal.Body>
-            <Modal.Footer>This is the footer</Modal.Footer>
+            <Modal.Header>Invite Friends</Modal.Header>
+            <Modal.Body>+</Modal.Body>
+            <Modal.Footer><button onClick={()=>navigate('/Hearts')}>Play</button></Modal.Footer>
         </Modal>
     );
 }

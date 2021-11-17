@@ -32,6 +32,7 @@ namespace CardGame.Controllers
         [HttpPost("register")]
         public IActionResult Post([FromBody] RegisterDto dto)
         {
+            //todo limit to only certain characters
             Console.WriteLine("POST: register");
             Console.WriteLine($"Username {dto.Username}\n" +
                 $"Email {dto.Email}\n" +

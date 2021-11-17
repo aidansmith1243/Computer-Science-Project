@@ -3,6 +3,7 @@ import GameSelection from "../../Components/GameSelection/GameSelection";
 import TopBar from "../../Components/TopBar/Topbar";
 import {HubConnectionBuilder} from '@microsoft/signalr';
 import { useEffect } from "react";
+import Notification from "../../Components/Notification/Notification";
 
 const Main = (props) => {
     const user = props.user;
@@ -13,16 +14,13 @@ const Main = (props) => {
        useEffect(() => {
         friendListConnection.start();
        },[])
-    
-    // friendListConnection.on("UpdateFriendList", (user, isOnline) => {
-    //     console.log(`User: ${user} Status: ${isOnline}`);
-    // });
 
     return (
         <div>
             <TopBar user={user}/>
             <FriendList friendUpdate = {friendListConnection}/>
             <GameSelection/>
+            <Notification/>
         </div>
     );
 }

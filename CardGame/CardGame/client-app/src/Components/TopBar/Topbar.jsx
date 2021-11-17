@@ -1,22 +1,27 @@
 import './TopBar.css';
+import { Navbar, Container } from 'react-bootstrap';
 
 const title_style =
 {
-    margin: '0',
-    fontSize: '30px',
+    height: "40px",
+    backgroundColor:"purple",
 };
 
 const TopBar = (props) => {
     const user = props.user;
     return (
-    <div className='TopBar'>
-        <h1 className='Title' style={title_style}>
-            Card Player
-        </h1>
-        <p>
-            Hi {user}
-        </p>
-    </div>  
+    <Navbar style={title_style} fixed="top">
+        <Container>
+          <Navbar.Brand>Card Game</Navbar.Brand>
+          <Navbar.Toggle />
+          <Navbar.Collapse className="justify-content-end">
+              {user ?
+            <Navbar.Text className="text-dark">
+              Hello, {user}
+            </Navbar.Text> : <div/>}
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
     );
 }
  
