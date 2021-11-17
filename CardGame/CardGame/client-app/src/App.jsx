@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 
 function App() {
   const [user, setUser] = useState(undefined);
-
+  
   return (
     <div className="App">
     <BrowserRouter>
@@ -20,14 +20,13 @@ function App() {
           <Route path = "/home" element = {<Main user={user}/>} />
           <Route path = "/Hearts" element = {<Hearts/>} />
           <Route path = "/CrazyEights" element = {<CrazyEights/>} />
+          <Route path = "/*" element = {<Login setUser={setUser}/>}/>
         </div>
           :
         <div>
-          <Route path = "" element = {<Login setUser={setUser}/>}/>
-          <Route path = "/login" element = {<Login setUser={setUser}/>}/>
+          <Route path = "/*" element = {<Login setUser={setUser}/>}/>
         </div>
         }
-        <Route path = "/*" element = {<ErrorPage/>} />
         
     </Routes>
    </BrowserRouter>

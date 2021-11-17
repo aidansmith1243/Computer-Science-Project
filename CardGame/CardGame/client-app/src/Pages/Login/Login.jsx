@@ -24,16 +24,11 @@ const Login = (props) => {
             )
         })
         .then(response => {
-            console.log(response)
             if(response.ok)
             {
                 props.setUser(username)
-                setRedirect(true);
+                //setRedirect(true);
             }
-            return response.json();
-        })
-        .then((data) => {
-            console.log(data)
         })
         .catch(err => {
             console.log(err);

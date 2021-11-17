@@ -44,16 +44,14 @@ namespace CardGame.Hubs
             // Get current online users
             foreach(var friend in _cardGameRepository.GetFriends(userId))
             {
-                if (friend.isOnline)
-                {
-                    Clients.Client(Context.ConnectionId).SendAsync("UpdateFriendList", friend.Username, true);
-                }
+                Clients.Client(Context.ConnectionId).SendAsync("UpdateFriendList", friend.Username, friend.isOnline);
             }
 
             // Join other users groups to be notified when they get online
             var userFriends = _cardGameRepository.GetFriends(userId);
             foreach (var friend in userFriends)
             {
+                Console.WriteLine($"User: {user.Username} Joined Group: {friend.Username}");
                 Groups.AddToGroupAsync(Context.ConnectionId, friend.UserId.ToString());
             }
 

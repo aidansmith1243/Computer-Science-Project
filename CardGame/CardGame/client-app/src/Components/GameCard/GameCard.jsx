@@ -3,7 +3,6 @@ import './GameCard.css';
 
 const GameCard = (props) => {
     const {title, link, info, players, invite} = props;
-    console.log(invite);
     const temp = () => {
         console.log('temp')
     }
