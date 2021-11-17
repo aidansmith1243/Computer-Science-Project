@@ -28,7 +28,7 @@ const Notification = () => {
     return ( 
     <div className="Notification">
         { notifications.map( notif => (
-            <Card style={{ width: '250px',marginRight: '20px', marginTop: '20px',alignItems:'left' }}>
+            <Card key={notif.user} style={{ width: '250px',marginRight: '20px', marginTop: '20px',alignItems:'left' }}>
                 <Card.Title style={{fontSize:"15px",marginTop: '5px',marginBottom: '-5px'}}> {notif.user} invited you to play {notif.game}</Card.Title>
                 <Card.Body>
                     <Button style={{fontSize:'10px', marginRight:'5px'}} size="sm" variant="primary" value={notif.user}>Accept</Button>

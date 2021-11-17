@@ -31,6 +31,7 @@ const GameSelection = () => {
                 invite={(e) => handlePlay}
             />
         </div>
+        <InviteModal show={showInvite} setShow={setShowInvite}/>
     </div> 
     );
 }
