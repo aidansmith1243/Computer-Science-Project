@@ -1,6 +1,8 @@
 ﻿using CardGame.Models;
+using CardGame.Models.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
@@ -17,11 +19,24 @@ namespace CardGame.Hubs
         {
             _cardGameRepository = cardGameRepository;
         }
-        //public Task UpdateFriendList()
-        //{
-        //    //Clients.Client("").SendAsync("","",false);
-        //    return Clients.All.SendAsync("UpdateFriendList", "name", false);
-        //}
+        [NonAction]
+        public User GetUser()
+        {
+            return _cardGameRepository.GetUserById(Context.User.Identity.Name); ;
+        }
+        public Task GameInvite(string user,string game,bool valid)
+        {
+            Console.WriteLine($"GameInvite {user}, {game},{valid}");
+            // Send invite to the user that is in their group
+            var me = GetUser();
+            return Clients.Group(user).SendAsync("GameInvite",me.Username, game, valid);
+        }
+        public Task GameInviteResponse(string user, bool didAccept)
+        {
+            // responde to the inviter if they joined the game
+            var me = GetUser();
+            return Clients.Group(user).SendAsync("GameInviteResponse", me.Username, didAccept);
+        }
         public override Task OnConnectedAsync()
         {
             Console.WriteLine($"User Connected to FriendHub: " +
@@ -55,10 +70,15 @@ namespace CardGame.Hubs
                 Groups.AddToGroupAsync(Context.ConnectionId, friend.UserId.ToString());
             }
 
+            // Join my group to receive game invites
+            Groups.AddToGroupAsync(Context.ConnectionId, user.Username);
+
             return base.OnConnectedAsync();
         }
         public override Task OnDisconnectedAsync(Exception exception)
         {
+            Console.WriteLine($"User Disconnected to FriendHub: " +
+                $"{_cardGameRepository.GetUserById(Context.User.Identity.Name)?.Username}");
             var user = _cardGameRepository.GetUserById(Context.User.Identity.Name);
             if (user == null)
             {

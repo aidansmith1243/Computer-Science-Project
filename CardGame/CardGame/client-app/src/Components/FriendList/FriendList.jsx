@@ -8,9 +8,10 @@ const title_style =
 };
 
 const FriendList = (props) => {
+    const {friendHub,friends,setFriends} = props;
     // Only update when first created
     useEffect(() => {
-        props.friendUpdate.on("UpdateFriendList", (user, isOnline) => {
+        friendHub.on("UpdateFriendList", (user, isOnline) => {
             console.log(`User: ${user} Status: ${isOnline}`);
             let found = false;
     
@@ -30,7 +31,6 @@ const FriendList = (props) => {
             setFriends(newFriendsList );
         });
     },[])
-    const [friends,setFriends] = useState([]);
 
     return ( 
         <div className="FriendList">

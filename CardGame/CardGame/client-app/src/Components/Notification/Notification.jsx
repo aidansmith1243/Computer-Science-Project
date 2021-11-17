@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Card,Button } from "react-bootstrap";
 import './Notification.css';
 
-const Notification = () => {
+const Notification = (props) => {
+    const {friendHub} = props;
     const notifExample = {
         user:"root",
         game:"Hearts",

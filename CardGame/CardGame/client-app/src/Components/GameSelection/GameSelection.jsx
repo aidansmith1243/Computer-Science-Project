@@ -1,12 +1,10 @@
-import Card from '../Card/Card';
 import GameCard from '../GameCard/GameCard';
-import InviteModal from '../InviteModal/InviteModal';
 import React, {useState} from 'react';
 import "../../../node_modules/bootstrap/dist/css/bootstrap.css";
 import './GameSelection.css';
 
-const GameSelection = () => {
-    const [showInvite, setShowInvite] = useState(false);
+const GameSelection = (props) => {
+    const {setShowInvite} = props;
     const handlePlay = (e) => {
         const game = e.target.value
         console.log(game)
@@ -31,7 +29,7 @@ const GameSelection = () => {
                 invite={(e) => handlePlay}
             />
         </div>
-        <InviteModal show={showInvite} setShow={setShowInvite}/>
+        
     </div> 
     );
 }
