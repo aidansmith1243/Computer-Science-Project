@@ -19,6 +19,7 @@ namespace CardGame.Models.Database
         public string Password { get; set; }
         [JsonIgnore]
         public bool isDeleted { get; set; } = false;
+        public bool isOnline { get; set; } = false;
         [JsonIgnore]
         public DateTimeOffset dateCreated { get; set; }
     }

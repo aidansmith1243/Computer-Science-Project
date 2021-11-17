@@ -45,16 +45,15 @@ namespace CardGame.Controllers
             return Created("success", _cardGameRepository.CreateUser(user));
         }
 
+
         [HttpPost("login")]
         public IActionResult Post([FromBody] LoginDto dto)
         {
             Console.WriteLine("POST: login");
             var user = _cardGameRepository.GetUserByUsername(dto.Username);
-            //if (user == null) return BadRequest(new { message = "Invalid Credentials" });
 
             if (user == null || !Crypto.VerifyHashedPassword(user.Password, dto.Password))
             {
-                Console.WriteLine("wrong", user);
                 return BadRequest(new { message = "Invalid Credentials" });
             }
 
@@ -70,23 +69,7 @@ namespace CardGame.Controllers
             return Ok(new
             {
                 message = "success",
-                auth=jwt
             });
         }
-
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpPost("temp")]
-        public IActionResult Temp()
-        {
-            Console.WriteLine($"Cookie= {Request.Cookies["access_token"]}");
-            Console.WriteLine($"Cookie Name= {_cardGameRepository.GetUserById(User.Identity.Name).Username}");
-
-            return Ok(new
-            {
-                message = "complete"
-            });
-        }
-
-
     }
 }

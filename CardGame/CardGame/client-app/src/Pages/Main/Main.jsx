@@ -5,32 +5,15 @@ import {HubConnectionBuilder} from '@microsoft/signalr';
 
 const Main = (props) => {
     const user = props.user;
-    const connection = new HubConnectionBuilder()
+    const friendListConnection = new HubConnectionBuilder()
        .withUrl("http://localhost:60230/Friend")
        .withAutomaticReconnect()
        .build();
-    connection.start();
-        // connection.on("ReceiveMessage", (user, message) => {
-        //     const msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        //     const encodedMsg = `${user} says ${msg}`;
-        //     console.log(encodedMsg);
-        // });
-        // const temp = "hello world";
-    // const run_thingy = async () => {
-    //     await fetch('http://localhost:60230/auth/temp/',{
-    //         headers: {'Content-Type': 'application/json',
-    //             "Access-Control-Allow-Origin": "http://localhost:60230"},
-    //         method: 'POST',
-    //         credentials: 'include',
-    //     })
-    //     .then(response => {
-    //         console.log(response)
-    //     })
-    //     .catch(err => {
-    //         console.log(err);
-    //     });
-    // };
-    //run_thingy();
+    friendListConnection.start();
+    friendListConnection.on("UpdateFriendList", (user, isOnline) => {
+        console.log(`User: ${user} Status: ${isOnline}`);
+    });
+
     return (
         <div>
             <TopBar user={user}/>
