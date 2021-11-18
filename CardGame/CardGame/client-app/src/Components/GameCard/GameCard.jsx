@@ -10,7 +10,7 @@ const GameCard = (props) => {
     <div className='GameCard'>
         <p className='Title'>{title} - {players} players</p>
         <a className='MoreInfo' href={info} target="_blank">i</a>
-        <button onClick={invite()} value={title}>Play</button>
+        <button onClick={(e) => invite(e,title)} value={title}>Play</button>
     </div>
     );
 }

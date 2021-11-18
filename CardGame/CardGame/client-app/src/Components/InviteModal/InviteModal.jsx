@@ -14,7 +14,6 @@ const InviteModal = (props) => {
                 friendHub.on("GameInviteResponse", (user, didAccept) => {
                     if(didAccept)
                     {
-                        console.log(invitedFriends)
                         setInvitedFriends(invitedFriends.map(x => {
                             if(x.user=== user){
                                 x.didAccept = true;
@@ -37,17 +36,17 @@ const InviteModal = (props) => {
                 await friendHub.start();
             }
             invitedFriends.forEach(e => {
-                friendHub.send("GameInvite",e.user,"",false)
+                friendHub.send("GameInvite",e.user,show.game,false)
             });
         }
         setInvitedFriends([]);
-        setShow(false);
+        setShow({value:false,game:null});
     };
-    const handleInvite = async (e,user,game) => {
+    const handleInvite = async (e,user) => {
         if(!friendHub._connectionStarted) {
             await friendHub.start().then(res=>{});
         }
-        await friendHub.send("GameInvite",user,game,true);
+        await friendHub.send("GameInvite",user,show.game,true);
         const friend = friends.filter(x => x.user === user)[0];
         
         friend.didAccept = false;
@@ -65,10 +64,10 @@ const InviteModal = (props) => {
 
     return ( 
         <Modal
-            show={show}
+            show={show.value}
             centered
         >
-            <Modal.Header>Invite Friends</Modal.Header>
+            <Modal.Header>Invite Friends to play {show.game}</Modal.Header>
             <Modal.Body>
             <Dropdown>
                 <Dropdown.Toggle variant="success" id="dropdown-basic">
@@ -78,7 +77,7 @@ const InviteModal = (props) => {
                 <Dropdown.Menu>
                     {
                         friends.filter(x => x.isOnline && invitedFriends.filter(y => y.user === x.user).length === 0).map(x => 
-                            <Dropdown.Item key={x.user} value={x.user} onClick={(e)=>handleInvite(e,x.user,'game')}>{x.user}</Dropdown.Item>
+                            <Dropdown.Item key={x.user} value={x.user} onClick={(e)=>handleInvite(e,x.user)}>{x.user}</Dropdown.Item>
                         )
                         }
                 </Dropdown.Menu>

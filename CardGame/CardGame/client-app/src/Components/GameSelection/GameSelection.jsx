@@ -5,10 +5,9 @@ import './GameSelection.css';
 
 const GameSelection = (props) => {
     const {setShowInvite} = props;
-    const handlePlay = (e) => {
+    const handlePlay = (e,name) => {
         const game = e.target.value
-        console.log(game)
-        setShowInvite(true);
+        setShowInvite({value:true,game:game});
     };
 
     return ( 
@@ -19,14 +18,14 @@ const GameSelection = (props) => {
                 link='/Hearts'
                 info='https://en.wikipedia.org/wiki/Hearts_(card_game)'
                 players='4'
-                invite={(e) => handlePlay}
+                invite={handlePlay}
             />
             <GameCard 
                 title='Crazy Eights'
                 link='/Crazy_Eights'
                 info='https://en.wikipedia.org/wiki/Crazy_Eights'
                 players='2+'
-                invite={(e) => handlePlay}
+                invite={handlePlay}
             />
         </div>
         

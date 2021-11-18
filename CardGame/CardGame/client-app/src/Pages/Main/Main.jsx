@@ -10,7 +10,7 @@ import LoadingModal from "../../Components/LoadingModal/LoadingModal";
 
 const Main = (props) => {
     const user = props.user;
-    const [showInvite, setShowInvite] = useState(false);
+    const [showInvite, setShowInvite] = useState({value: false, game: null});
     const [showLoading, setShowLoading] = useState({value: false, user: null});
     const [friends,setFriends] = useState([]);
 
