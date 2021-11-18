@@ -1,5 +1,6 @@
 import { useState,useEffect } from "react";
 import { Card,Button } from "react-bootstrap";
+import {useNavigate} from 'react-router-dom';
 import './Notification.css';
 
 const Notification = (props) => {
@@ -20,7 +21,11 @@ const Notification = (props) => {
                     setNotifications(notifications.filter( i => i.user !== user));
                     setShowLoading({value: false,user:null});
                 }
-        });}
+            });
+            friendHub.on("GameStart", (game,id) => {
+                alert(`start ${game}, ${id}`)
+            })
+        }
     },[friendHub])
 
     const declineInvite = async (e) =>

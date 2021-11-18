@@ -1,12 +1,10 @@
 import { Modal,Button, Dropdown,ListGroup } from 'react-bootstrap';
 import './InviteModal.css';
 import { useEffect, useState } from 'react';
-import {useNavigate} from 'react-router-dom';
 
 const InviteModal = (props) => {
     const {show,friends,friendHub,setShow} = props;
     const [invitedFriends, setInvitedFriends] = useState([]);
-    const navigate = useNavigate();
 
     useEffect(() => {
         (async () => {
@@ -58,8 +56,8 @@ const InviteModal = (props) => {
         if(!friendHub._connectionStarted) {
             await friendHub.start();
         }
-        //await friendHub.send("GameInvite","","",true)
-        //navigate("/hearts")
+        const playingFriends = invitedFriends.filter(x => x.didAccept).map(x => x.user);
+        await friendHub.send("GameStart",show.game,playingFriends);
     };
 
     return ( 

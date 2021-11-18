@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using CardGame.Games;
 
 namespace CardGame
 {
@@ -39,6 +40,7 @@ namespace CardGame
 
             services.AddScoped<JwtService>();
             services.AddScoped<CardGameRepository>();
+            services.AddSingleton<GameList>();
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {

@@ -24,6 +24,21 @@ namespace CardGame.Hubs
         {
             return _cardGameRepository.GetUserById(Context.User.Identity.Name); ;
         }
+        public Task GameStart(string game,List<string> players)
+        {
+            Console.Write($"GameStart {game}: ");
+
+            var me = GetUser();
+            players.Add(me.Username);
+            foreach(var p in players)
+            {
+                Console.Write($"{p}, ");
+                Clients.Group(p).SendAsync("GameStart", game, "somerandomid");
+            }
+            Console.WriteLine();
+            return Task.CompletedTask;
+
+        }
         public Task GameInvite(string user,string game,bool valid)
         {
             Console.WriteLine($"GameInvite {user}, {game}, {valid}");
