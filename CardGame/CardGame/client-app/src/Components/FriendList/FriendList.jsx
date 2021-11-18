@@ -11,26 +11,28 @@ const FriendList = (props) => {
     const {friendHub,friends,setFriends} = props;
     // Only update when first created
     useEffect(() => {
-        friendHub.on("UpdateFriendList", (user, isOnline) => {
-            console.log(`User: ${user} Status: ${isOnline}`);
-            let found = false;
-    
-            let newFriendsList = friends.map(f => {
-                if(f.user === user)
-                {
-                    found = true;
-                    f.isOnline = isOnline;
+        if(friendHub){
+            friendHub.on("UpdateFriendList", (user, isOnline) => {
+                console.log(`User: ${user} Status: ${isOnline}`);
+                let found = false;
+        
+                let newFriendsList = friends.map(f => {
+                    if(f.user === user)
+                    {
+                        found = true;
+                        f.isOnline = isOnline;
+                        return f;
+                    }
                     return f;
+                });
+                if(!found)
+                {
+                    newFriendsList.push({user: user, isOnline:isOnline})
                 }
-                return f;
-            });
-            if(!found)
-            {
-                newFriendsList.push({user: user, isOnline:isOnline})
-            }
-            setFriends(newFriendsList );
-        });
-    },[])
+                setFriends(newFriendsList );
+            
+        });}
+    },[friendHub])
 
     return ( 
         <div className="FriendList">

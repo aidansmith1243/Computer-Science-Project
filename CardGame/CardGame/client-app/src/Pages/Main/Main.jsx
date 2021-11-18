@@ -5,32 +5,56 @@ import TopBar from "../../Components/TopBar/Topbar";
 import {HubConnectionBuilder} from '@microsoft/signalr';
 import { useEffect,useState } from "react";
 import Notification from "../../Components/Notification/Notification";
+import {useNavigate} from 'react-router-dom';
 
 const Main = (props) => {
     const user = props.user;
     const [showInvite, setShowInvite] = useState(false);
     const [friends,setFriends] = useState([]);
-    const friendHub = new HubConnectionBuilder()
-       .withUrl("http://localhost:60230/Friend")
-       .withAutomaticReconnect()
-       .build();
-    useEffect(async () => {
-        await friendHub.start();
-        friendHub.send("test","test");
+
+    const [friendHub,setFriendHub] = useState(null);
+    // Start Connection
+    useEffect(() => {
+        if(friendHub) {
+            friendHub.start()
+                .then(result => {
+                    console.log(result)
+                })
+                .catch(e => console.log(e))
+        }
+    },[friendHub])
+    // setup connection
+    useEffect(() => {
+        const newConnection = new HubConnectionBuilder()
+            .withUrl('http://localhost:60230/Friend')
+            .withAutomaticReconnect()
+            .build();
+
+            setFriendHub(newConnection);
     },[])
-    const cancelInvite = async () => {
-        await friendHub.invoke("GameInvite",null,null,true).then(res => {
-            console.log(res)
-        })
-    }
 
     return (
         <div>
-            <TopBar user={user}/>
-            <FriendList friendHub={friendHub} friends={friends} setFriends={setFriends}/>
-            <GameSelection setShowInvite={setShowInvite}/>
-            <Notification friendHub={friendHub}/>
-            <InviteModal show={showInvite} setShow={setShowInvite} friendHub={friendHub} friends={friends} cancelInvite={cancelInvite}/>
+            <TopBar 
+                user={user}
+                />
+            <FriendList 
+                friendHub={friendHub} 
+                friends={friends} 
+                setFriends={setFriends}
+                />
+            <GameSelection 
+                setShowInvite={setShowInvite}
+                />
+            <Notification 
+                friendHub={friendHub}
+                />
+            <InviteModal 
+                show={showInvite} 
+                setShow={setShowInvite}
+                friends={friends} 
+                friendHub={friendHub}
+                />
         </div>
     );
 }
