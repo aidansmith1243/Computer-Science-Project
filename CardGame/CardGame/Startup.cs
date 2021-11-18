@@ -132,6 +132,7 @@ namespace CardGame
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<FriendHub>("/Friend");
+                endpoints.MapHub<GameHub>("/Game");
             });
 
             app.UseSpa(spa =>

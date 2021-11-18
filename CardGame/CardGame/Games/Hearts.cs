@@ -68,7 +68,11 @@ namespace CardGame.Games
         private class CenterCardSlot
         { 
             public HeartPlayer Player { get; set; }
-            public 
+            public Deck Stack { get; set; }
+            public CenterCardSlot()
+            {
+
+            }
         }
 
     }

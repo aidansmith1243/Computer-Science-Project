@@ -4,8 +4,9 @@ import {useNavigate} from 'react-router-dom';
 import './Notification.css';
 
 const Notification = (props) => {
-    const {friendHub,setShowLoading} = props;
+    const {friendHub,setShowLoading,setGameId} = props;
     const [notifications, setNotifications] = useState([]);
+    const navigate = useNavigate();
     useEffect(() => {
         if(friendHub){
             friendHub.on("GameInvite", (user, game, isValid) => {
@@ -23,7 +24,8 @@ const Notification = (props) => {
                 }
             });
             friendHub.on("GameStart", (game,id) => {
-                alert(`start ${game}, ${id}`)
+                setGameId(id);
+                navigate("/hearts"); // todo - change to game path not hard code hearts
             })
         }
     },[friendHub])

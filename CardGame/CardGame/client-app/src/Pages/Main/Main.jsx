@@ -9,7 +9,7 @@ import {useNavigate} from 'react-router-dom';
 import LoadingModal from "../../Components/LoadingModal/LoadingModal";
 
 const Main = (props) => {
-    const user = props.user;
+    const {user,setGameId} = props;
     const [showInvite, setShowInvite] = useState({value: false, game: null});
     const [showLoading, setShowLoading] = useState({value: false, user: null});
     const [friends,setFriends] = useState([]);
@@ -18,11 +18,9 @@ const Main = (props) => {
     // Start Connection
     useEffect(() => {
         if(friendHub) {
-            friendHub.start()
-                .then(result => {
-                    console.log(result)
-                })
-                .catch(e => console.log(e))
+            if(!friendHub._connectionStarted) {
+                friendHub.start();
+            }
         }
     },[friendHub])
     // setup connection
@@ -51,6 +49,7 @@ const Main = (props) => {
             <Notification 
                 friendHub={friendHub}
                 setShowLoading={setShowLoading}
+                setGameId={setGameId}
                 />
             <InviteModal 
                 show={showInvite} 

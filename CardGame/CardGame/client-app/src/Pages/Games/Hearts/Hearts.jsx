@@ -1,10 +1,36 @@
-import { position } from 'dom-helpers';
 import Card from '../../../Components/Card/Card';
 import TopBar from '../../../Components/TopBar/Topbar';
 import './Hearts.css';
+import {HubConnectionBuilder} from '@microsoft/signalr';
 import Draggable from 'react-draggable';
+import { useEffect, useState } from 'react';
+import Hand from '../../../Components/Card/Hand/Hand';
 
 const Hearts = () => {
+    const [gameConnection, setGameConnection] = useState(null)
+    useEffect(() => {
+        const newConnection = new HubConnectionBuilder()
+            .withUrl('http://localhost:60230/Game')
+            .withAutomaticReconnect()
+            .build();
+        newConnection.start();
+        setGameConnection(newConnection)
+    },[])
+    useEffect(() => {
+        (async () => {
+            if(gameConnection){
+                gameConnection.on("GameUpdate", (move,gameState) => {
+                    console.log("GameUpdate",(move,gameState));
+                })
+                gameConnection.on("InvalidMove", (gameState) => {
+                    console.log("InvalidMove", gameState);
+                })
+                gameConnection.on("GameState", (gameState) => {
+                    console.log("GameState", gameState);
+                })
+            }
+        })();
+    },[gameConnection]);
     const my_hand = [
         {suit: 'S', rank:'8'},
         {suit: 'H', rank:'10'},
@@ -39,13 +65,16 @@ const Hearts = () => {
         for(let i = 0; i < cards.length; i++)
         {
             cardElements.push(
-                <Draggable><div>
-                <Card 
-                    key={Math.random()}
-                    className={sideways ? 'CardSideways':''}
-                    suit={cards[i].suit} rank={cards[i].rank} 
-                    position={{x: mod_x, y: mod_y}}
-                /></div></Draggable>
+                <Draggable key={cards[i].suit + cards[i].rank}>
+                    <div>
+                        <Card 
+                    
+                            className={sideways ? 'CardSideways':''}
+                            suit={cards[i].suit} rank={cards[i].rank} 
+                            position={{x: mod_x, y: mod_y}}
+                            />
+                    </div>
+                </Draggable>
             )
             sideways ? mod_y += 40 : mod_x += 40;
         }
@@ -53,15 +82,33 @@ const Hearts = () => {
         return cardElements; 
     }
 
+    const release = (e) => {
+        console.log("released",e);
+    }
+
     return ( 
     <div className='Hearts'>
         <TopBar/>
+        
         <div className='Board'>
-            
-            {createFacingHand(600,700,my_hand)}
+        <Hand 
+            cards={my_hand}
+            x={50}
+            y={50}
+            />
+            {/* <Draggable
+                onStop={release}
+                >
+                <div>
+                <Card
+                    position={{x:0,y:0}}
+                    />
+                    </div>
+            </Draggable> */}
+            {/* {createFacingHand(600,700,my_hand)}
             {createFacingHand(50,200,op1_hand,true)}
             {createFacingHand(600,50,op2_hand)}
-            {createFacingHand(1200,200,op3_hand,true)}
+            {createFacingHand(1200,200,op3_hand,true)} */}
             {/* <Draggable><div><Card suit={'S'} rank={'8'} position={{x: 0, y: 0}}/></div></Draggable> */}
             {/* <Card suit={'S'} rank={'8'} position={{x: 0, y: 0}}/>
             <Card suit={'H'} rank={'Q'} position={{x: 25, y: 0}}/>

@@ -29,9 +29,12 @@ namespace CardGame.Hubs
             return _cardGameRepository.GetUserById(Context.User.Identity.Name); ;
         }
 
-        public Task JoinGame(string gameId)
+        public async Task<Task> JoinGame(string gameId)
         {
-            return Groups.AddToGroupAsync(Context.ConnectionId, gameId);
+            await Groups.AddToGroupAsync(Context.ConnectionId, gameId);
+
+            var game = _gameList[gameId];
+            return Clients.Client(Context.ConnectionId).SendAsync("GameState",game.GetGameState());
         }
         public Task Play(string gameId, string move)
         {
@@ -42,11 +45,12 @@ namespace CardGame.Hubs
                 return Task.CompletedTask;
             }
             bool canPlay = game.Play(move);
-            if(!canPlay)
-            {
-                return Clients.Client(Context.ConnectionId).SendAsync("InvalidMove");
-            }
             string gameState = game.GetGameState();
+            if (!canPlay)
+            {
+                return Clients.Client(Context.ConnectionId).SendAsync("InvalidMove",gameState);
+            }
+            
             return Clients.Groups(gameId).SendAsync("GameUpdate",move,gameState);
         }
 

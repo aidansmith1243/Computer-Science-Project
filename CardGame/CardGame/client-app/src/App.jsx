@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 
 function App() {
   const [user, setUser] = useState(undefined);
+  const [gameId, setGameId] = useState(undefined);
   
   return (
     <div className="App">
@@ -16,10 +17,9 @@ function App() {
       <Routes>
         { user ? 
         <div>
-          <Route path = "" element = {<Main user={user}/>} />
-          <Route path = "/home" element = {<Main user={user}/>} />
-          <Route path = "/Hearts" element = {<Hearts/>} />
-          <Route path = "/CrazyEights" element = {<CrazyEights/>} />
+          <Route path = "" element = {<Main user={user} setGameId={setGameId}/>} />
+          <Route path = "/Hearts" element = {<Hearts gameId={gameId}/>} />
+          <Route path = "/CrazyEights" element = {<CrazyEights gameId={gameId}/>} />
           <Route path = "/*" element = {<Login setUser={setUser}/>}/>
         </div>
           :
