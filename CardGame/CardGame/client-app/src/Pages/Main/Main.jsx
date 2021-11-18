@@ -6,10 +6,12 @@ import {HubConnectionBuilder} from '@microsoft/signalr';
 import { useEffect,useState } from "react";
 import Notification from "../../Components/Notification/Notification";
 import {useNavigate} from 'react-router-dom';
+import LoadingModal from "../../Components/LoadingModal/LoadingModal";
 
 const Main = (props) => {
     const user = props.user;
     const [showInvite, setShowInvite] = useState(false);
+    const [showLoading, setShowLoading] = useState({value: false, user: null});
     const [friends,setFriends] = useState([]);
 
     const [friendHub,setFriendHub] = useState(null);
@@ -48,11 +50,17 @@ const Main = (props) => {
                 />
             <Notification 
                 friendHub={friendHub}
+                setShowLoading={setShowLoading}
                 />
             <InviteModal 
                 show={showInvite} 
                 setShow={setShowInvite}
                 friends={friends} 
+                friendHub={friendHub}
+                />
+            <LoadingModal 
+                show={showLoading} 
+                setShow={setShowLoading}
                 friendHub={friendHub}
                 />
         </div>

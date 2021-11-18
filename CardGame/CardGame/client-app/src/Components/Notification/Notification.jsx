@@ -3,7 +3,7 @@ import { Card,Button } from "react-bootstrap";
 import './Notification.css';
 
 const Notification = (props) => {
-    const {friendHub} = props;
+    const {friendHub,setShowLoading} = props;
     const [notifications, setNotifications] = useState([]);
     useEffect(() => {
         if(friendHub){
@@ -18,6 +18,7 @@ const Notification = (props) => {
                 else
                 {
                     setNotifications(notifications.filter( i => i.user !== user));
+                    setShowLoading({value: false,user:null});
                 }
         });}
     },[friendHub])
@@ -33,13 +34,13 @@ const Notification = (props) => {
     };
     const acceptInvite = async (e) =>
     {
-        const user = e.target.value
+        const user = e.target.value;
         if(!friendHub._connectionStarted) {
             await friendHub.start();
         }
-        friendHub.send("GameInviteResponse",user,true)
-        setNotifications(notifications.filter(x => x.user !== user))
-        // todo join waiting room
+        friendHub.send("GameInviteResponse",user,true);
+        setNotifications(notifications.filter(x => x.user !== user));
+        setShowLoading({value: true,user:user});
     };
 
     return ( 
