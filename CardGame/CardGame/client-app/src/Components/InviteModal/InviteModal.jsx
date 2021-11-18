@@ -12,7 +12,6 @@ const InviteModal = (props) => {
         (async () => {
             if(friendHub){
                 friendHub.on("GameInviteResponse", (user, didAccept) => {
-                    console.log("Game Invite Response");
                     if(didAccept)
                     {
                         console.log(invitedFriends)
@@ -31,8 +30,7 @@ const InviteModal = (props) => {
             }
         })();
     },[friendHub]);
-    useEffect(() => {console.log("invited friends:",invitedFriends)},[invitedFriends]);
-    useEffect(() => {console.log("friends:",friends)},[friends]);
+
     const handleCancelInvite = async (e) => {
         if(invitedFriends.length > 0){
             if(!friendHub._connectionStarted) {
@@ -45,16 +43,17 @@ const InviteModal = (props) => {
         setInvitedFriends([]);
         setShow(false);
     };
-    const handleInvite = (e,user,game) => {
+    const handleInvite = async (e,user,game) => {
         if(!friendHub._connectionStarted) {
-            friendHub.start().then(res=>{});
+            await friendHub.start().then(res=>{});
         }
-        friendHub.send("GameInvite",user,game,true);
+        await friendHub.send("GameInvite",user,game,true);
         const friend = friends.filter(x => x.user === user)[0];
+        
         friend.didAccept = false;
         const tempFriends = invitedFriends;
         tempFriends.push(friend)
-        setInvitedFriends(tempFriends);
+        setInvitedFriends([...tempFriends]);
     };
     const handlePlay = async (e) => {
         if(!friendHub._connectionStarted) {
@@ -78,10 +77,10 @@ const InviteModal = (props) => {
 
                 <Dropdown.Menu>
                     {
-                        friends.filter(x => x.isOnline && x.didAccept === undefined).map(x => 
+                        friends.filter(x => x.isOnline && invitedFriends.filter(y => y.user === x.user).length === 0).map(x => 
                             <Dropdown.Item key={x.user} value={x.user} onClick={(e)=>handleInvite(e,x.user,'game')}>{x.user}</Dropdown.Item>
                         )
-                    }
+                        }
                 </Dropdown.Menu>
             </Dropdown>
             <ListGroup style={{marginTop:"10px"}}>
@@ -92,7 +91,7 @@ const InviteModal = (props) => {
                         <p>{u.didAccept ? "Ready" : "Pending"}</p>
                         </div>
                     )
-                }
+                    }
             </ListGroup>
             </Modal.Body>
             <Modal.Footer>

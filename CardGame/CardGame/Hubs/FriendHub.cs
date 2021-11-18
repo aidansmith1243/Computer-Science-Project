@@ -26,7 +26,7 @@ namespace CardGame.Hubs
         }
         public Task GameInvite(string user,string game,bool valid)
         {
-            Console.WriteLine($"GameInvite {user}, {game},{valid}");
+            Console.WriteLine($"GameInvite {user}, {game}, {valid}");
             // Send invite to the user that is in their group
             var me = GetUser();
             return Clients.Group(user).SendAsync("GameInvite",me.Username, game, valid);
@@ -34,6 +34,7 @@ namespace CardGame.Hubs
         public Task GameInviteResponse(string user, bool didAccept)
         {
             // responde to the inviter if they joined the game
+            Console.WriteLine($"GameInviteResponse: {user}, {didAccept}");
             var me = GetUser();
             return Clients.Group(user).SendAsync("GameInviteResponse", me.Username, didAccept);
         }

@@ -13,7 +13,7 @@ const FriendList = (props) => {
     useEffect(() => {
         if(friendHub){
             friendHub.on("UpdateFriendList", (user, isOnline) => {
-                console.log(`User: ${user} Status: ${isOnline}`);
+                //console.log(`User: ${user} Status: ${isOnline}`);
                 let found = false;
         
                 let newFriendsList = friends.map(f => {
