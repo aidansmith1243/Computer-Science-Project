@@ -1,4 +1,5 @@
-﻿using CardGame.Models;
+﻿using CardGame.Games;
+using CardGame.Models;
 using CardGame.Models.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -15,9 +16,11 @@ namespace CardGame.Hubs
     public class FriendHub : Hub
     {
         private readonly CardGameRepository _cardGameRepository;
-        public FriendHub(CardGameRepository cardGameRepository)
+        private readonly GameList _gameList;
+        public FriendHub(CardGameRepository cardGameRepository, GameList gameList)
         {
             _cardGameRepository = cardGameRepository;
+            _gameList = gameList;
         }
         [NonAction]
         public User GetUser()
@@ -26,22 +29,19 @@ namespace CardGame.Hubs
         }
         public Task GameStart(string game,List<string> players)
         {
-            Console.Write($"GameStart {game}: ");
-
             var me = GetUser();
             players.Add(me.Username);
-            foreach(var p in players)
+            string gameId = _gameList.CreateGame(game, players);
+            foreach (var p in players)
             {
-                Console.Write($"{p}, ");
-                Clients.Group(p).SendAsync("GameStart", game, "somerandomid");
+                Clients.Group(p).SendAsync("GameStart", game, gameId);
             }
-            Console.WriteLine();
             return Task.CompletedTask;
 
         }
         public Task GameInvite(string user,string game,bool valid)
         {
-            Console.WriteLine($"GameInvite {user}, {game}, {valid}");
+            //Console.WriteLine($"GameInvite {user}, {game}, {valid}");
             // Send invite to the user that is in their group
             var me = GetUser();
             return Clients.Group(user).SendAsync("GameInvite",me.Username, game, valid);
@@ -49,14 +49,14 @@ namespace CardGame.Hubs
         public Task GameInviteResponse(string user, bool didAccept)
         {
             // responde to the inviter if they joined the game
-            Console.WriteLine($"GameInviteResponse: {user}, {didAccept}");
+            //Console.WriteLine($"GameInviteResponse: {user}, {didAccept}");
             var me = GetUser();
             return Clients.Group(user).SendAsync("GameInviteResponse", me.Username, didAccept);
         }
         public override Task OnConnectedAsync()
         {
-            Console.WriteLine($"User Connected to FriendHub: " +
-                $"{_cardGameRepository.GetUserById(Context.User.Identity.Name)?.Username}");
+            //Console.WriteLine($"User Connected to FriendHub: " +
+               // $"{_cardGameRepository.GetUserById(Context.User.Identity.Name)?.Username}");
 
             var user = _cardGameRepository.GetUserById(Context.User.Identity.Name);
             if (user == null)
@@ -93,8 +93,8 @@ namespace CardGame.Hubs
         }
         public override Task OnDisconnectedAsync(Exception exception)
         {
-            Console.WriteLine($"User Disconnected to FriendHub: " +
-                $"{_cardGameRepository.GetUserById(Context.User.Identity.Name)?.Username}");
+            //Console.WriteLine($"User Disconnected to FriendHub: " +
+              //  $"{_cardGameRepository.GetUserById(Context.User.Identity.Name)?.Username}");
             var user = _cardGameRepository.GetUserById(Context.User.Identity.Name);
             if (user == null)
             {

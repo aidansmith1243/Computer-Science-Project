@@ -31,13 +31,23 @@ namespace CardGame.Hubs
 
         public Task JoinGame(string gameId)
         {
-            var me = GetUser();
             return Groups.AddToGroupAsync(Context.ConnectionId, gameId);
         }
         public Task Play(string gameId, string move)
         {
-
-            return Task.CompletedTask;
+            var game = _gameList[gameId];
+            if (game == null)
+            {
+                Console.WriteLine($"ERROR: No game found for: {gameId}");
+                return Task.CompletedTask;
+            }
+            bool canPlay = game.Play(move);
+            if(!canPlay)
+            {
+                return Clients.Client(Context.ConnectionId).SendAsync("InvalidMove");
+            }
+            string gameState = game.GetGameState();
+            return Clients.Groups(gameId).SendAsync("GameUpdate",move,gameState);
         }
 
     }

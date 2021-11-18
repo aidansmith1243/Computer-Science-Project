@@ -11,10 +11,11 @@ namespace CardGame.Games.Helpers
         public static readonly char[] RANKS = { 'A', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'J', 'Q', 'K' };
         public List<Card> CardDeck { get; set; }
         public List<Card> DiscardDeck { get; set; }
-        public Deck(bool shuffle = true)
+        public Deck(bool shuffle = true, bool isEmpty=false)
         {
             DiscardDeck = new List<Card>();
-            CreateDeck();
+            CardDeck = new List<Card>();
+            if (!isEmpty) CreateDeck();
             if(shuffle) Shuffle();
         }
         public void CreateDeck()
@@ -28,7 +29,7 @@ namespace CardGame.Games.Helpers
                 }
             }
         }
-        public void DiscardCard(Card card)
+        public void Discard(Card card)
         {
             DiscardDeck.Add(card);
         }
@@ -51,12 +52,20 @@ namespace CardGame.Games.Helpers
                 CardDeck[j] = temp;
             }
         }
+        public void Add(Card c)
+        {
+            CardDeck.Add(c);
+        }
         public Card Draw()
         {
             int index = CardDeck.Count - 1;
             var card = CardDeck[index];
             CardDeck.RemoveAt(index);
             return card;
+        }
+        public void ArrangeCardsSuitOrder()
+        {
+            CardDeck = CardDeck.OrderBy(x => x.SUIT).ThenBy(x => x.RANK).ToList();
         }
     }
 }

@@ -17,14 +17,14 @@ namespace CardGame.Games
         {
             get => Games.Find(x => x.Id == key);
         }
-        public string CreateGame(string game)
+        public string CreateGame(string game, List<string> players)
         {
             string id = Guid.NewGuid().ToString();
             Game createdGame = null;
             switch(game.ToLower())
             {
                 case "hearts":
-                    createdGame = new Hearts() { Id = id };
+                    createdGame = new Hearts(players) { Id = id };
                     break;
             }
             if(createdGame != null)
