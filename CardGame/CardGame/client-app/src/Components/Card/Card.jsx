@@ -21,7 +21,7 @@ const Card = (props) => {
             break;
     }
     return ( 
-    <div className={className !== undefined ? 'Card ' + className : 'Card'} style={{top: position.y, left: position.x}}>
+    <div className={className !== undefined ? 'Card ' + className : 'Card'}>
         {visible ? 
         <div>
             <p className='Rank noselect' style={{color: color, fontWeight: 'bold'}}>{rank}</p>
