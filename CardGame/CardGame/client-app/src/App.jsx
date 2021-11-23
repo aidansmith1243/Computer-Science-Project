@@ -15,7 +15,8 @@ function App() {
     <div className="App">
     <BrowserRouter>
       <Routes>
-        { user ? 
+        <Route path = "/*" element = {<Hearts gameId={gameId}/>} />
+        {/* user ? 
         <div>
           <Route path = "" element = {<Main user={user} setGameId={setGameId}/>} />
           <Route path = "/Hearts" element = {<Hearts gameId={gameId}/>} />
@@ -26,7 +27,7 @@ function App() {
         <div>
           <Route path = "/*" element = {<Login setUser={setUser}/>}/>
         </div>
-        }
+        */}
         
     </Routes>
    </BrowserRouter>
