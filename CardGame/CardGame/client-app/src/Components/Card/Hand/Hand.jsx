@@ -3,7 +3,6 @@ import { Draggable, Droppable, DragDropContext } from 'react-beautiful-dnd';
 import Card from '../Card';
 
 const Hand = (props) => {
-  //const [cards,setCards] = useState([...props.cards])
   const { x, y, rotated, release, id, cards, setCards } = props;
   //rotated = 'left','right','down'
   const cardHeight = 140;
@@ -27,16 +26,6 @@ const Hand = (props) => {
 
   const dif = 40;
   let mod = 0 - dif;
-
-  const getItems = () =>
-    cards.map((k) => ({
-      id: k.suit ? `card-${k.suit} ${k.rank}` : `card-${cards.indexOf(k)}`,
-      content: <Card position={{ x: 0, y: 0 }} suit={k.suit} rank={k.rank} />,
-    }));
-  const [items, setItems] = useState(getItems());
-  useEffect(() => {
-    setItems(getItems());
-  }, [cards]);
 
   const grid = 8;
   const getItemStyle = (isDragging, draggableStyle) => ({
@@ -69,8 +58,20 @@ const Hand = (props) => {
             style={getListStyle(snapshot.isDraggingOver)}
             {...provided.droppableProps}
           >
-            {items.map((item, index) => (
-              <Draggable key={item.id} draggableId={item.id} index={index}>
+            {cards.map((k) => (
+              <Draggable
+                key={
+                  k.suit
+                    ? `card-${k.suit} ${k.rank}`
+                    : `card-${cards.indexOf(k)}`
+                }
+                draggableId={
+                  k.suit
+                    ? `card-${k.suit} ${k.rank}`
+                    : `card-${cards.indexOf(k)}`
+                }
+                index={cards.indexOf(k)}
+              >
                 {(provided, snapshot) => (
                   <div
                     ref={provided.innerRef}
@@ -81,7 +82,11 @@ const Hand = (props) => {
                       provided.draggableProps.style
                     )}
                   >
-                    {item.content}
+                    <Card
+                      position={{ x: 0, y: 0 }}
+                      suit={k.suit}
+                      rank={k.rank}
+                    />
                   </div>
                 )}
               </Draggable>

@@ -5,11 +5,11 @@ import { HubConnectionBuilder } from '@microsoft/signalr';
 import { Draggable, Droppable, DragDropContext } from 'react-beautiful-dnd';
 import { useEffect, useState } from 'react';
 import Hand from '../../../Components/Card/Hand/Hand';
-import { setState } from 'react';
 
 const Hearts = () => {
   const [gameConnection, setGameConnection] = useState(null);
 
+  //#region useEffects
   useEffect(() => {
     const newConnection = new HubConnectionBuilder()
       .withUrl('http://localhost:60230/Game')
@@ -33,6 +33,9 @@ const Hearts = () => {
       }
     })();
   }, [gameConnection]);
+  //#endregion
+
+  //#region Test card layouts
   const [myHand, setMyHand] = useState([
     { suit: 'S', rank: '8' },
     { suit: 'H', rank: '10' },
@@ -63,13 +66,7 @@ const Hearts = () => {
     { suit: undefined, rank: undefined },
     { suit: undefined, rank: undefined },
   ];
-
-  const getItems = (count) =>
-    Array.from({ length: count }, (v, k) => k).map((k) => ({
-      id: `item-${k}`,
-      content: `item ${k}`,
-    }));
-  const [items, setItems] = useState(getItems(6));
+  //#endregion
 
   const onDragEnd = (result) => {
     const { source, destination } = result;
@@ -94,12 +91,12 @@ const Hearts = () => {
     }
 
     // remove from current location
-    const [removedItem] = sourceList.splice(source.index, 1);
-    setCardList(source.droppableId, sourceList);
+    const tempList = [...sourceList];
+    const [removedItem] = tempList.splice(source.index, 1);
+    setCardList(source.droppableId, tempList);
 
     // add to next location
     destinationList.push(removedItem);
-    console.log(removedItem);
     setCardList(destination.droppableId, destinationList);
   };
   const getCardList = (id) => {
@@ -129,7 +126,7 @@ const Hearts = () => {
 
     return result;
   };
-
+  //#region render
   return (
     <div className='Hearts'>
       <TopBar />
@@ -154,6 +151,7 @@ const Hearts = () => {
       </div>
     </div>
   );
+  //#endregion
 };
 
 export default Hearts;
