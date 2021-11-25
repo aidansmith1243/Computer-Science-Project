@@ -1,0 +1,8 @@
+.CardSlot {
+  border-radius: 10px;
+  border: 4px solid grey;
+  height: 140px;
+  width: 90px;
+  position: absolute;
+  filter: drop-shadow(1px 1px 1px);
+}

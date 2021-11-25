@@ -5,6 +5,7 @@ import { HubConnectionBuilder } from '@microsoft/signalr';
 import { Draggable, Droppable, DragDropContext } from 'react-beautiful-dnd';
 import { useEffect, useState } from 'react';
 import Hand from '../../../Components/Card/Hand/Hand';
+import CardSlot from '../../../Components/CardSlot/CardSlot';
 
 const Hearts = () => {
   const [gameConnection, setGameConnection] = useState(null);
@@ -51,6 +52,8 @@ const Hearts = () => {
     { suit: 'C', rank: '3' },
     { suit: 'H', rank: 'A' },
   ]);
+  const [myHandPlayCard, setMyHandPlayCard] = useState();
+
   const [op1Hand, setOp1Hand] = useState([
     { suit: undefined, rank: undefined },
     { suit: undefined, rank: undefined },
@@ -136,7 +139,7 @@ const Hearts = () => {
       case 'op1Hand':
         return op1Hand;
       default:
-        return;
+        return [];
     }
   };
   const setCardList = (id, newList) => {
@@ -146,7 +149,7 @@ const Hearts = () => {
       case 'op1Hand':
         return setOp1Hand([...newList]);
       default:
-        return;
+        return [];
     }
   };
   const reorder = (list, startIndex, endIndex) => {
@@ -171,6 +174,7 @@ const Hearts = () => {
             setCards={setMyHand}
             isDragDisabled={false}
           />
+          <CardSlot x={380} y={460} id='myHandPlay' card={myHandPlayCard} />
         </DragDropContext>
         {/* Left */}
         <DragDropContext onDragEnd={() => {}}>

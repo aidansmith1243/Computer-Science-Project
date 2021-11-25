@@ -1,63 +1,63 @@
 .Card {
-    border-radius: 10px;
-    border: 4px solid black;
-    background-color: white;
-    height: 140px;
-    width: 90px;
-    position: absolute;
-    filter: drop-shadow(1px 1px 6px)
+  border-radius: 10px;
+  border: 4px solid black;
+  background-color: white;
+  height: 140px;
+  width: 90px;
+  position: absolute;
+  filter: drop-shadow(1px 1px 4px);
 }
 
-.Card:hover{
-    border-color: gray;
+.Card:hover {
+  border-color: gray;
 }
 .Card p {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .Card .Rank {
-    font-weight: bold;
-    position: absolute;
-    left: 5px;
+  font-weight: bold;
+  position: absolute;
+  left: 5px;
 }
 .Card .Suit {
-    position: absolute;
-    top: 13px;
-    left: 5px;
+  position: absolute;
+  top: 13px;
+  left: 5px;
 }
 .Card .LargeSuit {
-    font-size: 70px;
-    padding-top: 10px;
+  font-size: 70px;
+  padding-top: 10px;
 }
 .Card .RankUpsideDown {
-    transform: rotate(-180deg);
-    font-weight: bold;
-    position: absolute;
-    right: 5px;
-    bottom: 0px;
+  transform: rotate(-180deg);
+  font-weight: bold;
+  position: absolute;
+  right: 5px;
+  bottom: 0px;
 }
 .Card .SuitUpsideDown {
-    transform: rotate(-180deg);
-    font-weight: bold;
-    position: absolute;
-    right: 5px;
-    bottom: 13px;
+  transform: rotate(-180deg);
+  font-weight: bold;
+  position: absolute;
+  right: 5px;
+  bottom: 13px;
 }
 
 .CardLeft {
-    transform: rotate(-90deg);
+  transform: rotate(-90deg);
 }
 .CardRight {
-    transform: rotate(90deg);
+  transform: rotate(90deg);
 }
 
 .noselect {
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Old versions of Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
 }
