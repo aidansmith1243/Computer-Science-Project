@@ -1,7 +1,7 @@
 .Hearts .Board {
-    position: fixed;
-    height: calc(100% - 40px);
-    width: 100%;
-    background-color: green;
-    top:40px;
+  position: fixed;
+  height: calc(100% - 40px);
+  width: 100%;
+  background-color: green;
+  top: 40px;
 }

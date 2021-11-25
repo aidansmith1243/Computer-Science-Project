@@ -3,7 +3,7 @@ import { Draggable, Droppable, DragDropContext } from 'react-beautiful-dnd';
 import Card from '../Card';
 
 const Hand = (props) => {
-  const { x, y, rotated, release, id, cards, setCards } = props;
+  const { x, y, rotated, release, id, cards, setCards, isDragDisabled } = props;
   //rotated = 'left','right','down'
   const cardHeight = 140;
   const cardWidth = 90;
@@ -60,6 +60,7 @@ const Hand = (props) => {
           >
             {cards.map((k) => (
               <Draggable
+                isDragDisabled={isDragDisabled}
                 key={
                   k.suit
                     ? `card-${k.suit} ${k.rank}`

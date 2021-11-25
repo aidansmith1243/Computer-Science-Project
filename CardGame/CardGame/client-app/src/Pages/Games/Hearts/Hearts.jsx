@@ -45,27 +45,57 @@ const Hearts = () => {
     { suit: 'H', rank: '9' },
     { suit: 'C', rank: 'Q' },
     { suit: 'D', rank: 'A' },
+    { suit: 'H', rank: 'Q' },
+    { suit: 'C', rank: '10' },
+    { suit: 'D', rank: '9' },
+    { suit: 'C', rank: '3' },
+    { suit: 'H', rank: 'A' },
   ]);
   const [op1Hand, setOp1Hand] = useState([
     { suit: undefined, rank: undefined },
     { suit: undefined, rank: undefined },
     { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
   ]);
-  const op2_hand = [
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-  ];
-  const op3_hand = [
+  const [op2Hand, setOp2Hand] = useState([
     { suit: undefined, rank: undefined },
     { suit: undefined, rank: undefined },
     { suit: undefined, rank: undefined },
     { suit: undefined, rank: undefined },
     { suit: undefined, rank: undefined },
     { suit: undefined, rank: undefined },
-  ];
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+  ]);
+  const [op3Hand, setOp3Hand] = useState([
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+    { suit: undefined, rank: undefined },
+  ]);
   //#endregion
 
   const onDragEnd = (result) => {
@@ -95,7 +125,7 @@ const Hearts = () => {
     const [removedItem] = tempList.splice(source.index, 1);
     setCardList(source.droppableId, tempList);
 
-    // add to next location
+    // add to next location at the end
     destinationList.push(removedItem);
     setCardList(destination.droppableId, destinationList);
   };
@@ -134,19 +164,49 @@ const Hearts = () => {
       <div className='Board'>
         <DragDropContext onDragEnd={onDragEnd}>
           <Hand
-            x={100}
-            y={200}
+            x={160}
+            y={620}
             id='myHand'
             cards={myHand}
             setCards={setMyHand}
+            isDragDisabled={false}
           />
-          <Hand
-            x={100}
-            y={500}
-            id='op1Hand'
-            cards={op1Hand}
-            setCards={setOp1Hand}
-          />
+        </DragDropContext>
+        {/* Left */}
+        <DragDropContext onDragEnd={() => {}}>
+          <div style={{ position: 'absolute', transform: 'rotate(90deg)' }}>
+            <Hand
+              x={150}
+              y={-200}
+              id='op1Hand'
+              cards={op1Hand}
+              setCards={setOp1Hand}
+              isDragDisabled={true}
+            />
+          </div>
+
+          {/* Top */}
+          <div style={{ position: 'absolute', transform: 'rotate(180deg)' }}>
+            <Hand
+              x={-680}
+              y={-200}
+              id='op2Hand'
+              cards={op2Hand}
+              setCards={setOp2Hand}
+              isDragDisabled={true}
+            />
+          </div>
+          {/* Right */}
+          <div style={{ position: 'absolute', transform: 'rotate(-90deg)' }}>
+            <Hand
+              x={-670}
+              y={640}
+              id='op3Hand'
+              cards={op3Hand}
+              setCards={setOp3Hand}
+              isDragDisabled={true}
+            />
+          </div>
         </DragDropContext>
       </div>
     </div>
