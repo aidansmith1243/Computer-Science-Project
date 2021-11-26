@@ -3,7 +3,7 @@ import Card from '../Card/Card';
 import './CardSlot.css';
 
 const CardSlot = (props) => {
-  const { x, y, id, card } = props;
+  const { x, y, id, card, isPlayable } = props;
 
   return (
     <div className='CardSlot' style={{ top: y, left: x }}>
@@ -11,7 +11,7 @@ const CardSlot = (props) => {
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
-            // style={getListStyle(snapshot.isDraggingOver)}
+            style={{ display: 'flex', padding: 0, height: '140px' }}
             {...provided.droppableProps}
           >
             {card ? (

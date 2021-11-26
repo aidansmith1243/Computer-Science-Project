@@ -6,3 +6,7 @@
   position: absolute;
   filter: drop-shadow(1px 1px 1px);
 }
+.CardSlotPlayable {
+  filter: drop-shadow(1px 1px 1px);
+  border: 4px solid darkgray;
+}

@@ -110,7 +110,7 @@ const Hearts = () => {
     }
 
     const sourceList = getCardList(source.droppableId);
-    const destinationList = getCardList(destination.droppableId);
+    let destinationList = getCardList(destination.droppableId);
 
     // moved in its own hand
     if (source.droppableId === destination.droppableId) {
@@ -129,15 +129,16 @@ const Hearts = () => {
     setCardList(source.droppableId, tempList);
 
     // add to next location at the end
-    destinationList.push(removedItem);
+    destinationList = removedItem;
     setCardList(destination.droppableId, destinationList);
+    console.log('played card:', removedItem);
   };
   const getCardList = (id) => {
     switch (id) {
       case 'myHand':
         return myHand;
-      case 'op1Hand':
-        return op1Hand;
+      case 'myHandPlay':
+        return myHandPlayCard;
       default:
         return [];
     }
@@ -146,8 +147,8 @@ const Hearts = () => {
     switch (id) {
       case 'myHand':
         return setMyHand([...newList]);
-      case 'op1Hand':
-        return setOp1Hand([...newList]);
+      case 'myHandPlay':
+        return setMyHandPlayCard(newList);
       default:
         return [];
     }
