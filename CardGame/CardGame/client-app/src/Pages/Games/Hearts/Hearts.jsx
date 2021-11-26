@@ -37,6 +37,7 @@ const Hearts = () => {
   //#endregion
 
   //#region Test card layouts
+  const [myHandPlayCard, setMyHandPlayCard] = useState();
   const [myHand, setMyHand] = useState([
     { suit: 'S', rank: '8' },
     { suit: 'H', rank: '10' },
@@ -52,8 +53,8 @@ const Hearts = () => {
     { suit: 'C', rank: '3' },
     { suit: 'H', rank: 'A' },
   ]);
-  const [myHandPlayCard, setMyHandPlayCard] = useState();
 
+  const [op1HandPlayCard, setOp1HandPlayCard] = useState();
   const [op1Hand, setOp1Hand] = useState([
     { suit: undefined, rank: undefined },
     { suit: undefined, rank: undefined },
@@ -69,6 +70,8 @@ const Hearts = () => {
     { suit: undefined, rank: undefined },
     { suit: undefined, rank: undefined },
   ]);
+
+  const [op2HandPlayCard, setOp2HandPlayCard] = useState();
   const [op2Hand, setOp2Hand] = useState([
     { suit: undefined, rank: undefined },
     { suit: undefined, rank: undefined },
@@ -84,6 +87,8 @@ const Hearts = () => {
     { suit: undefined, rank: undefined },
     { suit: undefined, rank: undefined },
   ]);
+
+  const [op3HandPlayCard, setOp3HandPlayCard] = useState();
   const [op3Hand, setOp3Hand] = useState([
     { suit: undefined, rank: undefined },
     { suit: undefined, rank: undefined },
@@ -100,6 +105,7 @@ const Hearts = () => {
     { suit: undefined, rank: undefined },
   ]);
   //#endregion
+  const onCardPlayed = (card) => {};
 
   const onDragEnd = (result) => {
     const { source, destination } = result;
@@ -131,7 +137,7 @@ const Hearts = () => {
     // add to next location at the end
     destinationList = removedItem;
     setCardList(destination.droppableId, destinationList);
-    console.log('played card:', removedItem);
+    onCardPlayed(removedItem);
   };
   const getCardList = (id) => {
     switch (id) {
@@ -177,6 +183,7 @@ const Hearts = () => {
           />
           <CardSlot x={380} y={460} id='myHandPlay' card={myHandPlayCard} />
         </DragDropContext>
+
         {/* Left */}
         <DragDropContext onDragEnd={() => {}}>
           <div style={{ position: 'absolute', transform: 'rotate(90deg)' }}>
@@ -189,7 +196,14 @@ const Hearts = () => {
               isDragDisabled={true}
             />
           </div>
-
+          <div style={{ position: 'absolute', transform: 'rotate(90deg)' }}>
+            <CardSlot
+              x={365}
+              y={-370}
+              id='op1HandPlay'
+              card={op1HandPlayCard}
+            />
+          </div>
           {/* Top */}
           <div style={{ position: 'absolute', transform: 'rotate(180deg)' }}>
             <Hand
@@ -201,6 +215,15 @@ const Hearts = () => {
               isDragDisabled={true}
             />
           </div>
+          <div style={{ position: 'absolute', transform: 'rotate(180deg)' }}>
+            <CardSlot
+              x={-470}
+              y={-360}
+              id='op2HandPlay'
+              card={op2HandPlayCard}
+            />
+          </div>
+
           {/* Right */}
           <div style={{ position: 'absolute', transform: 'rotate(-90deg)' }}>
             <Hand
@@ -210,6 +233,14 @@ const Hearts = () => {
               cards={op3Hand}
               setCards={setOp3Hand}
               isDragDisabled={true}
+            />
+          </div>
+          <div style={{ position: 'absolute', transform: 'rotate(-90deg)' }}>
+            <CardSlot
+              x={-455}
+              y={480}
+              id='op3HandPlay'
+              card={op3HandPlayCard}
             />
           </div>
         </DragDropContext>
