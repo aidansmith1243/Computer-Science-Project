@@ -25,15 +25,17 @@ namespace CardGame.Games
                                select new 
                 { 
                     Name = p.Name,
-                    Cards = p.Hand.CardDeck.Count,
+                    Hand = p.Hand.CardDeck.Count,
                     CardSlot = p.CenterSlot,
                     Score = p.Score,
+                    PlayerOrder = p.PlayerOrder,
                 }).ToList();
 
             var state = new
             {
                 Player = me,
-                Others = otherPlayers
+                Others = otherPlayers,
+                CurrentTurn = CurrentTurn,
             };
             return JsonConvert.SerializeObject(state);
         }
@@ -42,9 +44,11 @@ namespace CardGame.Games
         {
             AllowHearts = false;
             playerData = new List<HeartPlayer>();
+            int count = 0;
             foreach(var p in Players)
             {
-                HeartPlayer temp = new HeartPlayer(p);
+                HeartPlayer temp = new HeartPlayer(p,count);
+                count++;
                 for(int i = 0; i < 13; i++)
                 {
                     temp.Hand.Add(Deck.Draw());
@@ -100,9 +104,11 @@ namespace CardGame.Games
             public Deck Hand { get; set; }
             public Card CenterSlot { get; set; }
             public int Score { get; set; }
-            public HeartPlayer(string name)
+            public int PlayerOrder { get; }
+            public HeartPlayer(string name,int order)
             {
                 Name = name;
+                PlayerOrder = order;
                 CenterSlot = null;
                 Hand = new Deck(false, true);
             }

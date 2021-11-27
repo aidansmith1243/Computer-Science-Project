@@ -34,6 +34,7 @@ namespace CardGame.Hubs
         {
             if (gameId == null || gameId == "") return Task.CompletedTask;
             var user = GetUser();
+            if (user == null) return Task.CompletedTask;
 
             //await Groups.AddToGroupAsync(Context.ConnectionId, gameId);
             await Groups.AddToGroupAsync(Context.ConnectionId, user.Username);

@@ -15,25 +15,46 @@ namespace CardGame.Models
             _context = context;
 
             // todo Remove temp code for testing
-            var temp = GetUserByUsername("admin");
+            var temp = GetUserByUsername("p1");
             if(temp == null)
             {
                 var U1 = new User {
                     UserId = Guid.NewGuid(),
-                    Username = "admin",
+                    Username = "p1",
                     Email = "temp@temp.com",
-                    Password = Crypto.HashPassword("root")
+                    Password = Crypto.HashPassword("a")
                 };
                 var U2 = new User
                 {
                     UserId = Guid.NewGuid(),
-                    Username = "root",
+                    Username = "p2",
                     Email = "temp2@temp.com",
-                    Password = Crypto.HashPassword("root")
+                    Password = Crypto.HashPassword("a")
+                };
+                var U3 = new User
+                {
+                    UserId = Guid.NewGuid(),
+                    Username = "p3",
+                    Email = "temp3@temp.com",
+                    Password = Crypto.HashPassword("a")
+                };
+                var U4 = new User
+                {
+                    UserId = Guid.NewGuid(),
+                    Username = "p4",
+                    Email = "temp4@temp.com",
+                    Password = Crypto.HashPassword("a")
                 };
                 CreateUser(U1);
                 CreateUser(U2);
+                CreateUser(U3);
+                CreateUser(U4);
                 CreateFriendConnection(U1.UserId, U2.UserId);
+                CreateFriendConnection(U1.UserId, U3.UserId);
+                CreateFriendConnection(U1.UserId, U4.UserId);
+                CreateFriendConnection(U2.UserId, U3.UserId);
+                CreateFriendConnection(U2.UserId, U4.UserId);
+                CreateFriendConnection(U3.UserId, U4.UserId);
             }
         }
 

@@ -10,7 +10,6 @@ import CardSlot from '../../../Components/CardSlot/CardSlot';
 const Hearts = (props) => {
   const { gameId } = props;
   const [gameConnection, setGameConnection] = useState(null);
-  const [ready, setReady] = useState(false);
 
   //#region useEffects
   useEffect(() => {
@@ -32,8 +31,9 @@ const Hearts = (props) => {
       newConnection.on('GameState', (gameState) => {
         const state = JSON.parse(gameState);
         console.log('GameState', state);
-        setMyHand(ConvertCards(state.Player.Hand.CardDeck));
-        setMyHandPlayCard(ConvertCard(state.Player.CenterSlot));
+        SetLayoutFromGameState(state);
+        //setMyHand(ConvertCards(state.Player.Hand.CardDeck));
+        //setMyHandPlayCard(ConvertCard(state.Player.CenterSlot));
       });
       if (!newConnection._connectionStarted) await newConnection.start();
       setGameConnection(newConnection);
@@ -48,10 +48,56 @@ const Hearts = (props) => {
 
   //#endregion
 
+  const SetLayoutFromGameState = (state) => {
+    // My Hand
+    const myOrder = state.Player.PlayerOrder;
+    setMyHand(ConvertCards(state.Player.Hand.CardDeck));
+    setMyHandPlayCard(ConvertCard(state.Player.CenterSlot));
+
+    setMyName(state.Player.Name);
+
+    setMyScore(state.Player.Score);
+
+    // Op1
+    let cards = [];
+    const op1 = state.Others.find(
+      (x) => x.PlayerOrder === (myOrder + 1) % 4
+    )[0];
+    cards = [];
+    for (let i = 0; i < op1.Hand; i++)
+      cards.push({ suit: undefined, rank: undefined });
+    setOp1Hand(cards);
+    setOp1HandPlayCard(op1.CenterSlot);
+    setOp1Name(op1.Name);
+    setOp1Score(op1.Score);
+    // Op2
+    const op2 = state.Others.find((x) => x.PlayerOrder === (myOrder + 2) % 4);
+    cards = [];
+    for (let i = 0; i < op2.Hand; i++)
+      cards.push({ suit: undefined, rank: undefined });
+    setOp2Hand(cards);
+    setOp2HandPlayCard(op2.CenterSlot);
+    setOp2Name(op2.Name);
+    setOp2Score(op2.Score);
+    // Op3
+    const op3 = state.Others.find((x) => x.PlayerOrder === (myOrder + 3) % 4);
+    cards = [];
+    for (let i = 0; i < op3.Hand; i++)
+      cards.push({ suit: undefined, rank: undefined });
+    setOp3Hand(cards);
+    console.log(cards);
+    setOp3HandPlayCard(op3.CenterSlot);
+    setOp3Name(op3.Name);
+    setOp3Score(op3.Score);
+  };
+
+  const ValidateGameState = () => {};
+
   const ConvertCards = (cards) => {
     const finalCards = cards.map((c) => ConvertCard(c));
     return finalCards;
   };
+
   const ConvertCard = (card) => {
     if (card == null) return null;
     const finalCard = {
@@ -63,74 +109,27 @@ const Hearts = (props) => {
 
   //#region Test card layouts
   const [myHandPlayCard, setMyHandPlayCard] = useState(null);
-  // const [myHand, setMyHand] = useState([
-  //   { suit: 'S', rank: '8' },
-  //   { suit: 'H', rank: '10' },
-  //   { suit: 'C', rank: 'A' },
-  //   { suit: 'D', rank: 'Q' },
-  //   { suit: 'S', rank: '10' },
-  //   { suit: 'H', rank: '9' },
-  //   { suit: 'C', rank: 'Q' },
-  //   { suit: 'D', rank: 'A' },
-  //   { suit: 'H', rank: 'Q' },
-  //   { suit: 'C', rank: '10' },
-  //   { suit: 'D', rank: '9' },
-  //   { suit: 'C', rank: '3' },
-  //   { suit: 'H', rank: 'A' },
-  // ]);
   const [myHand, setMyHand] = useState([]);
+  const [myName, setMyName] = useState('Me');
+  const [myScore, setMyScore] = useState(0);
 
   const [op1HandPlayCard, setOp1HandPlayCard] = useState();
-  const [op1Hand, setOp1Hand] = useState([
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-  ]);
+  const [op1Hand, setOp1Hand] = useState([]);
+  const [op1Name, setOp1Name] = useState('Op1');
+  const [op1Score, setOp1Score] = useState(0);
 
   const [op2HandPlayCard, setOp2HandPlayCard] = useState();
-  const [op2Hand, setOp2Hand] = useState([
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-  ]);
+  const [op2Hand, setOp2Hand] = useState([]);
+  const [op2Name, setOp2Name] = useState('Op2');
+  const [op2Score, setOp2Score] = useState(0);
 
   const [op3HandPlayCard, setOp3HandPlayCard] = useState();
-  const [op3Hand, setOp3Hand] = useState([
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-    { suit: undefined, rank: undefined },
-  ]);
+  const [op3Hand, setOp3Hand] = useState([]);
+  const [op3Name, setOp3Name] = useState('Op3');
+  const [op3Score, setOp3Score] = useState(0);
+
   //#endregion
+
   const onCardPlayed = async (card) => {
     if (!gameConnection._connectionStarted) {
       await gameConnection.start();
@@ -198,6 +197,7 @@ const Hearts = (props) => {
 
     return result;
   };
+
   //#region render
   return (
     <div className='Hearts'>
@@ -215,7 +215,9 @@ const Hearts = (props) => {
           />
           <CardSlot x={380} y={460} id='myHandPlay' card={myHandPlayCard} />
         </DragDropContext>
-
+        <h4 style={{ position: 'absolute', top: '790px', left: '190px' }}>
+          {myName} - {myScore}
+        </h4>
         {/* Left */}
         <DragDropContext onDragEnd={() => {}}>
           <div style={{ position: 'absolute', transform: 'rotate(90deg)' }}>
@@ -236,6 +238,10 @@ const Hearts = (props) => {
               card={op1HandPlayCard}
             />
           </div>
+          <h4 style={{ position: 'absolute', top: '820px', left: '190px' }}>
+            {op1Name} - {op1Score}
+          </h4>
+
           {/* Top */}
           <div style={{ position: 'absolute', transform: 'rotate(180deg)' }}>
             <Hand
@@ -255,6 +261,9 @@ const Hearts = (props) => {
               card={op2HandPlayCard}
             />
           </div>
+          <h4 style={{ position: 'absolute', top: '850px', left: '190px' }}>
+            {op2Name} - {op2Score}
+          </h4>
 
           {/* Right */}
           <div style={{ position: 'absolute', transform: 'rotate(-90deg)' }}>
@@ -275,6 +284,9 @@ const Hearts = (props) => {
               card={op3HandPlayCard}
             />
           </div>
+          <h4 style={{ position: 'absolute', top: '880px', left: '190px' }}>
+            {op3Name} - {op3Score}
+          </h4>
         </DragDropContext>
       </div>
     </div>
