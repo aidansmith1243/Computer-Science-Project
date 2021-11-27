@@ -3,40 +3,19 @@ import './InviteModal.css';
 import { useEffect, useState } from 'react';
 
 const InviteModal = (props) => {
-  const { show, friends, friendHub, setShow } = props;
-  const [invitedFriends, setInvitedFriends] = useState([]);
+  const {
+    show,
+    friends,
+    friendHub,
+    setShow,
+    invitedFriends,
+    setInvitedFriends,
+  } = props;
 
-  useEffect(() => {
-    (async () => {
-      if (friendHub) {
-        friendHub.on('GameInviteResponse', (user, didAccept) => {
-          console.log('A1');
-          if (didAccept) {
-            console.log('A1');
-            setInvitedFriends(
-              invitedFriends.map((x) => {
-                if (x.user === user) {
-                  x.didAccept = true;
-                }
-                return x;
-              })
-            );
-            console.log(invitedFriends);
-          } else {
-            console.log('A3');
-            setInvitedFriends(invitedFriends.filter((i) => i.user !== user));
-            console.log('A4');
-          }
-        });
-      }
-      console.log(invitedFriends);
-    })();
-  }, [friendHub]);
-
-  const handleCancelInvite = async (e) => {
+  const handleCancelInvite = (e) => {
     if (invitedFriends.length > 0) {
       if (!friendHub._connectionStarted) {
-        await friendHub.start();
+        //await friendHub.start();
       }
       invitedFriends.forEach((e) => {
         friendHub.send('GameInvite', e.user, show.game, false);
@@ -45,26 +24,30 @@ const InviteModal = (props) => {
     setInvitedFriends([]);
     setShow({ value: false, game: null });
   };
-  const handleInvite = async (e, user) => {
+  const handleInvite = (e, user) => {
     if (!friendHub._connectionStarted) {
-      await friendHub.start().then((res) => {});
+      //friendHub.start().then((res) => {});
+      console.log('restarting friendhub');
     }
-    await friendHub.send('GameInvite', user, show.game, true);
+    friendHub.send('GameInvite', user, show.game, true);
+    console.log('friend invite', friends);
     const friend = friends.filter((x) => x.user === user)[0];
 
     friend.didAccept = false;
-    const tempFriends = invitedFriends;
-    tempFriends.push(friend);
-    setInvitedFriends([...tempFriends]);
+
+    invitedFriends.push(friend);
+    console.log('Invited', invitedFriends);
+    setInvitedFriends([...invitedFriends]);
   };
-  const handlePlay = async (e) => {
+
+  const handlePlay = (e) => {
     if (!friendHub._connectionStarted) {
-      await friendHub.start();
+      //await friendHub.start();
     }
     const playingFriends = invitedFriends
       .filter((x) => x.didAccept)
       .map((x) => x.user);
-    await friendHub.send('GameStart', show.game, playingFriends);
+    friendHub.send('GameStart', show.game, playingFriends);
   };
 
   return (
