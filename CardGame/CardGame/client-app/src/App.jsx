@@ -1,5 +1,5 @@
 import './App.css';
-import {BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './Pages/Login/Login';
 import Main from './Pages/Main/Main';
 import ErrorPage from './Pages/ErrorPage/ErrorPage';
@@ -10,27 +10,31 @@ import { useEffect, useState } from 'react';
 function App() {
   const [user, setUser] = useState(undefined);
   const [gameId, setGameId] = useState(undefined);
-  
+
   return (
-    <div className="App">
-    <BrowserRouter>
-      <Routes>
-        <Route path = "/*" element = {<Hearts gameId={gameId}/>} />
-        {/* user ? 
-        <div>
-          <Route path = "" element = {<Main user={user} setGameId={setGameId}/>} />
-          <Route path = "/Hearts" element = {<Hearts gameId={gameId}/>} />
-          <Route path = "/CrazyEights" element = {<CrazyEights gameId={gameId}/>} />
-          <Route path = "/*" element = {<Login setUser={setUser}/>}/>
-        </div>
-          :
-        <div>
-          <Route path = "/*" element = {<Login setUser={setUser}/>}/>
-        </div>
-        */}
-        
-    </Routes>
-   </BrowserRouter>
+    <div className='App'>
+      <BrowserRouter>
+        <Routes>
+          {user ? (
+            <div>
+              <Route
+                path=''
+                element={<Main user={user} setGameId={setGameId} />}
+              />
+              <Route path='/Hearts' element={<Hearts gameId={gameId} />} />
+              <Route
+                path='/CrazyEights'
+                element={<CrazyEights gameId={gameId} />}
+              />
+              <Route path='/*' element={<Login setUser={setUser} />} />
+            </div>
+          ) : (
+            <div>
+              <Route path='/*' element={<Login setUser={setUser} />} />
+            </div>
+          )}
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

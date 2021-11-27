@@ -18,5 +18,11 @@ namespace CardGame.Games.Helpers
         {
             return $"Card: {RANK}|{SUIT}";
         }
+        public override bool Equals(object obj)
+        {
+            var other = obj as Card;
+            if (other == null) return false;
+            return other.RANK == RANK && other.SUIT == SUIT;
+        }
     }
 }

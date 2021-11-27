@@ -18,8 +18,8 @@ namespace CardGame.Games.Helpers
         protected string gameState;
 
         // Methods
-        public abstract bool Play(string move);
-        public abstract string GetGameState();
+        public abstract bool Play(string player, string move);
+        public abstract string GetGameState(string user);
         public Game(List<string> players)
         {
             Players = players;

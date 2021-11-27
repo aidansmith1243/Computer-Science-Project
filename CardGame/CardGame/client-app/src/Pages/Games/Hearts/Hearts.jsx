@@ -7,52 +7,78 @@ import { useEffect, useState } from 'react';
 import Hand from '../../../Components/Card/Hand/Hand';
 import CardSlot from '../../../Components/CardSlot/CardSlot';
 
-const Hearts = () => {
+const Hearts = (props) => {
+  const { gameId } = props;
   const [gameConnection, setGameConnection] = useState(null);
+  const [ready, setReady] = useState(false);
 
   //#region useEffects
   useEffect(() => {
-    const newConnection = new HubConnectionBuilder()
-      .withUrl('http://localhost:60230/Game')
-      .withAutomaticReconnect()
-      .build();
-    //newConnection.start();
-    //setGameConnection(newConnection)
-  }, []);
-  useEffect(() => {
     (async () => {
-      if (gameConnection) {
-        gameConnection.on('GameUpdate', (move, gameState) => {
-          console.log('GameUpdate', (move, gameState));
-        });
-        gameConnection.on('InvalidMove', (gameState) => {
-          console.log('InvalidMove', gameState);
-        });
-        gameConnection.on('GameState', (gameState) => {
-          console.log('GameState', gameState);
-        });
-      }
-    })();
+      const newConnection = new HubConnectionBuilder()
+        .withUrl('http://localhost:60230/Game')
+        .withAutomaticReconnect()
+        .build();
+      newConnection.on('GameUpdate', (move, gameState) => {
+        const state = JSON.parse(gameState);
+        console.log('GameUpdate', (move, state));
+      });
+      newConnection.on('InvalidMove', (gameState) => {
+        const state = JSON.parse(gameState);
+        console.log('InvalidMove', state.Player);
+        setMyHand(ConvertCards(state.Player.Hand.CardDeck));
+        setMyHandPlayCard(ConvertCard(state.Player.CenterSlot));
+      });
+      newConnection.on('GameState', (gameState) => {
+        const state = JSON.parse(gameState);
+        console.log('GameState', state);
+        setMyHand(ConvertCards(state.Player.Hand.CardDeck));
+        setMyHandPlayCard(ConvertCard(state.Player.CenterSlot));
+      });
+      if (!newConnection._connectionStarted) await newConnection.start();
+      setGameConnection(newConnection);
+    })().catch((err) => console.log(err));
+  }, []);
+
+  useEffect(() => {
+    if (gameConnection && gameConnection._connectionStarted) {
+      gameConnection.send('JoinGame', gameId);
+    }
   }, [gameConnection]);
+
   //#endregion
 
+  const ConvertCards = (cards) => {
+    const finalCards = cards.map((c) => ConvertCard(c));
+    return finalCards;
+  };
+  const ConvertCard = (card) => {
+    if (card == null) return null;
+    const finalCard = {
+      suit: card.SUIT,
+      rank: card.RANK === '0' ? '10' : card.RANK,
+    };
+    return finalCard;
+  };
+
   //#region Test card layouts
-  const [myHandPlayCard, setMyHandPlayCard] = useState();
-  const [myHand, setMyHand] = useState([
-    { suit: 'S', rank: '8' },
-    { suit: 'H', rank: '10' },
-    { suit: 'C', rank: 'A' },
-    { suit: 'D', rank: 'Q' },
-    { suit: 'S', rank: '10' },
-    { suit: 'H', rank: '9' },
-    { suit: 'C', rank: 'Q' },
-    { suit: 'D', rank: 'A' },
-    { suit: 'H', rank: 'Q' },
-    { suit: 'C', rank: '10' },
-    { suit: 'D', rank: '9' },
-    { suit: 'C', rank: '3' },
-    { suit: 'H', rank: 'A' },
-  ]);
+  const [myHandPlayCard, setMyHandPlayCard] = useState(null);
+  // const [myHand, setMyHand] = useState([
+  //   { suit: 'S', rank: '8' },
+  //   { suit: 'H', rank: '10' },
+  //   { suit: 'C', rank: 'A' },
+  //   { suit: 'D', rank: 'Q' },
+  //   { suit: 'S', rank: '10' },
+  //   { suit: 'H', rank: '9' },
+  //   { suit: 'C', rank: 'Q' },
+  //   { suit: 'D', rank: 'A' },
+  //   { suit: 'H', rank: 'Q' },
+  //   { suit: 'C', rank: '10' },
+  //   { suit: 'D', rank: '9' },
+  //   { suit: 'C', rank: '3' },
+  //   { suit: 'H', rank: 'A' },
+  // ]);
+  const [myHand, setMyHand] = useState([]);
 
   const [op1HandPlayCard, setOp1HandPlayCard] = useState();
   const [op1Hand, setOp1Hand] = useState([
@@ -105,7 +131,13 @@ const Hearts = () => {
     { suit: undefined, rank: undefined },
   ]);
   //#endregion
-  const onCardPlayed = (card) => {};
+  const onCardPlayed = async (card) => {
+    if (!gameConnection._connectionStarted) {
+      await gameConnection.start();
+    }
+    gameConnection.send('Play', gameId, JSON.stringify(card));
+    console.log('play', card);
+  };
 
   const onDragEnd = (result) => {
     const { source, destination } = result;
