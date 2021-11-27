@@ -81,7 +81,8 @@ namespace CardGame.Games
 
             //From move:
             HeartPlayer curPlayer = playerData.Where(p => p.Name == player).FirstOrDefault();
-            
+
+            if (curPlayer.PlayerOrder != CurrentTurn) return false;
             if(curPlayer.Hand.CardDeck.Contains(playedCard) && curPlayer.CenterSlot == null)
             {
                 curPlayer.Hand.CardDeck.Remove(playedCard);
@@ -95,7 +96,7 @@ namespace CardGame.Games
             }
 
 
-            if(validMove) { MoveCount++; }
+            if(validMove) { MoveCount++; CurrentTurn += 1; CurrentTurn %= 4; }
             return validMove;
         }
         private class HeartPlayer

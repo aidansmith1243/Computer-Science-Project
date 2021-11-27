@@ -36,7 +36,7 @@ namespace CardGame.Hubs
             var user = GetUser();
             if (user == null) return Task.CompletedTask;
 
-            //await Groups.AddToGroupAsync(Context.ConnectionId, gameId);
+            await Groups.AddToGroupAsync(Context.ConnectionId, gameId);
             await Groups.AddToGroupAsync(Context.ConnectionId, user.Username);
             
             
@@ -64,8 +64,12 @@ namespace CardGame.Hubs
                 Console.WriteLine("Invalid Move");
                 return Clients.Client(Context.ConnectionId).SendAsync("InvalidMove",gameState);
             }
+
             Console.WriteLine("Game Update");
-            return Clients.Groups(gameId).SendAsync("GameUpdate",move,gameState);
+            foreach(var eachUser in game.Players)
+                Clients.Groups(eachUser).SendAsync("GameUpdate",move, game.GetGameState(eachUser));
+            
+            return Task.CompletedTask;
         }
         public override Task OnConnectedAsync()
         {

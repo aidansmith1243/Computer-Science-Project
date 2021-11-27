@@ -21,6 +21,7 @@ const Hearts = (props) => {
       newConnection.on('GameUpdate', (move, gameState) => {
         const state = JSON.parse(gameState);
         console.log('GameUpdate', (move, state));
+        SetLayoutFromGameState(state);
       });
       newConnection.on('InvalidMove', (gameState) => {
         const state = JSON.parse(gameState);
@@ -59,34 +60,31 @@ const Hearts = (props) => {
     setMyScore(state.Player.Score);
 
     // Op1
-    let cards = [];
-    const op1 = state.Others.find(
-      (x) => x.PlayerOrder === (myOrder + 1) % 4
-    )[0];
-    cards = [];
+    const op1 = state.Others.find((x) => x.PlayerOrder === (myOrder + 1) % 4);
+    const cards1 = [];
     for (let i = 0; i < op1.Hand; i++)
-      cards.push({ suit: undefined, rank: undefined });
-    setOp1Hand(cards);
-    setOp1HandPlayCard(op1.CenterSlot);
+      cards1.push({ suit: undefined, rank: undefined });
+    setOp1Hand(cards1);
+    setOp1HandPlayCard(ConvertCard(op1.CardSlot));
     setOp1Name(op1.Name);
     setOp1Score(op1.Score);
     // Op2
     const op2 = state.Others.find((x) => x.PlayerOrder === (myOrder + 2) % 4);
-    cards = [];
+    const cards2 = [];
     for (let i = 0; i < op2.Hand; i++)
-      cards.push({ suit: undefined, rank: undefined });
-    setOp2Hand(cards);
-    setOp2HandPlayCard(op2.CenterSlot);
+      cards2.push({ suit: undefined, rank: undefined });
+    setOp2Hand(cards2);
+    setOp2HandPlayCard(ConvertCard(op2.CardSlot));
     setOp2Name(op2.Name);
     setOp2Score(op2.Score);
     // Op3
     const op3 = state.Others.find((x) => x.PlayerOrder === (myOrder + 3) % 4);
-    cards = [];
+    const cards3 = [];
     for (let i = 0; i < op3.Hand; i++)
-      cards.push({ suit: undefined, rank: undefined });
-    setOp3Hand(cards);
-    console.log(cards);
-    setOp3HandPlayCard(op3.CenterSlot);
+      cards3.push({ suit: undefined, rank: undefined });
+    setOp3Hand(cards3);
+    console.log(cards3);
+    setOp3HandPlayCard(ConvertCard(op3.CardSlot));
     setOp3Name(op3.Name);
     setOp3Score(op3.Score);
   };
