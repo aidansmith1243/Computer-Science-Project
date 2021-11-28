@@ -12,6 +12,7 @@ namespace CardGame.Games
     {
         private List<HeartPlayer> playerData;
         private bool AllowHearts;
+        private Card StartingCard;
         public Hearts(List<string> players) : base(players)
         {
             InitializeGame();
@@ -44,6 +45,7 @@ namespace CardGame.Games
         {
             AllowHearts = false;
             playerData = new List<HeartPlayer>();
+            StartingCard = null;
             int count = 0;
             foreach(var p in Players)
             {
@@ -52,6 +54,7 @@ namespace CardGame.Games
                 for(int i = 0; i < 13; i++)
                 {
                     temp.Hand.Add(Deck.Draw());
+                    temp.Hand.ArrangeCardsSuitOrder();
                 }
                 playerData.Add(temp);
             }
@@ -61,6 +64,7 @@ namespace CardGame.Games
         {
             bool validMove = false;
 
+            // convert move json string to the card played
             dynamic mov = JObject.Parse(move);
             Card playedCard;
             try
@@ -79,24 +83,73 @@ namespace CardGame.Games
             }
             Console.WriteLine($"Played {playedCard}");
 
-            //From move:
+
             HeartPlayer curPlayer = playerData.Where(p => p.Name == player).FirstOrDefault();
 
-            if (curPlayer.PlayerOrder != CurrentTurn) return false;
-            if(curPlayer.Hand.CardDeck.Contains(playedCard) && curPlayer.CenterSlot == null)
+
+            // validate move
+            if( curPlayer.PlayerOrder == CurrentTurn &&
+                curPlayer.Hand.CardDeck.Contains(playedCard) && 
+                curPlayer.CenterSlot == null)
             {
+                // First card played
+                if(StartingCard == null)
+                {
+                    // Check if I can play heart
+                    if(
+                        playedCard.SUIT == 'H' && 
+                        !AllowHearts && 
+                        curPlayer.Hand.CardDeck.Where(x => x.SUIT == 'H').ToList().Count != curPlayer.Hand.CardDeck.Count
+                        )
+                    {
+                        return false;
+                    }
+                    
+                    StartingCard = playedCard;
+                }
+                // Not first Card down
+                else
+                {
+                    // played a different suit then started
+                    if(StartingCard.SUIT != playedCard.SUIT && 
+                        curPlayer.Hand.CardDeck.Where(x => x.SUIT == StartingCard.SUIT).ToList().Count != 0)
+                    {
+                        return false;
+                    }
+                    //set heart status
+                    if (playedCard.SUIT == 'H') AllowHearts = true;
+                    
+                }
                 curPlayer.Hand.CardDeck.Remove(playedCard);
                 curPlayer.CenterSlot = playedCard;
                 validMove = true;
             }
-            else
-            {
-                Console.WriteLine(curPlayer.Hand.CardDeck.Contains(playedCard));
-                return false;
-            }
-
 
             if(validMove) { MoveCount++; CurrentTurn += 1; CurrentTurn %= 4; }
+
+            //Check if 4 cards have been played
+            List<Card> centerCards = playerData.Where(x => x.CenterSlot != null).Select(x => x.CenterSlot).ToList();
+            var RankConvert = new Dictionary<char, int>()
+            { {'A',14},{'2',2},{'3',3},{'4',4},{'5',5},{'6',6},{'7',7},{'8',8},{'9',9},{'0',10},{'J',11},{'Q',12},{'K',13} };
+
+            if (centerCards.Count >= 4)
+            {
+                var winner = playerData
+                    .Where(x => x.CenterSlot.SUIT == playedCard.SUIT)
+                    .OrderByDescending(x=> RankConvert[x.CenterSlot.RANK])
+                    .FirstOrDefault();
+                winner.Score += centerCards.Where(x => x.SUIT == 'H').ToList().Count;
+                CurrentTurn = winner.PlayerOrder;
+                //var rankedCards = centerCards.Where(x => x.SUIT == playedCard.SUIT).Select(x => RankConvert[x.SUIT]).ToArray();
+                //var max = rankedCards.Max();
+
+                StartingCard = null;
+                foreach (var x in playerData)
+                {
+                    x.CenterSlot = null;
+                }
+            }
+
             return validMove;
         }
         private class HeartPlayer
