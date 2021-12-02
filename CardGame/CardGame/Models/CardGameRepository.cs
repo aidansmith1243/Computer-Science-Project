@@ -60,10 +60,21 @@ namespace CardGame.Models
 
         public User CreateUser(User user)
         {
-            _context.User.Add(user);
-            _context.SaveChanges();
+            try
+            {
+                _context.User.Add(user);
+                _context.SaveChanges();
+            }
+            catch
+            {
+                Console.WriteLine("Error creating user");
+                return null;
+            }
             return user;
-            //todo error check if invalid creation
+        }
+        public List<User> GetUsers()
+        {
+            return _context.User.ToList();
         }
         public void CreateFriendConnection(Guid user1, Guid user2)
         {

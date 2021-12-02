@@ -5,7 +5,6 @@ import TopBar from '../../Components/TopBar/Topbar';
 import { HubConnectionBuilder } from '@microsoft/signalr';
 import { useEffect, useState } from 'react';
 import Notification from '../../Components/Notification/Notification';
-import { useNavigate } from 'react-router-dom';
 import LoadingModal from '../../Components/LoadingModal/LoadingModal';
 
 const Main = (props) => {

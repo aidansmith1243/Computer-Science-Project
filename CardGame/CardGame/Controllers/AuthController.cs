@@ -37,13 +37,23 @@ namespace CardGame.Controllers
             Console.WriteLine($"Username {dto.Username}\n" +
                 $"Email {dto.Email}\n" +
                 $"Password {dto.Password}");
+
+            var users = _cardGameRepository.GetUsers();
+            if (users.Where(x => x.Username == dto.Username || x.Email == dto.Email).ToList().Count > 0)
+            {
+                return BadRequest();
+            }
             var user = new User
             {
                 Username = dto.Username,
                 Email = dto.Email,
                 Password = Crypto.HashPassword(dto.Password)
             };
-            return Created("success", _cardGameRepository.CreateUser(user));
+            var createdUser = _cardGameRepository.CreateUser(user);
+            
+            if (createdUser == null)
+                return BadRequest();
+            return Created("success",true);
         }
 
 

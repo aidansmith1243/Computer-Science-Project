@@ -1,18 +1,18 @@
 .LoginPage {
-    background-color: green;
-    position: fixed;
-    height: 100%;
-    width: 100%;
+  background-color: green;
+  position: fixed;
+  height: 100%;
+  width: 100%;
 }
 input {
-    display: block;
+  display: block;
 }
 
-form {
-    padding: 30px;
-    margin: auto;
-    background-color: gray;
-    width: 250px;
-    justify-content: center;
-    margin-top: 150px;
+.LoginPage .login-register-box {
+  padding: 30px;
+  margin: auto;
+  background-color: white;
+  width: 250px;
+  justify-content: center;
+  margin-top: 150px;
 }
