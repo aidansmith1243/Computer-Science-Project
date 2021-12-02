@@ -76,7 +76,58 @@ namespace CardGame.Models
         {
             return _context.User.ToList();
         }
-        public void CreateFriendConnection(Guid user1, Guid user2)
+        public List<string> GetPendingInvites(string userId)
+        {
+            var friendIds = _context.Friends.Where(x => x.CurrentUserId.ToString() == userId && x.isPending).Select(x => x.OtherUserId).ToList();
+            List<string> friends = new List<string>();
+            foreach(var x in friendIds)
+            {
+                friends.Add(GetUserById(x.ToString()).Username);
+            }
+            return friends;
+        }
+        public bool AddFriend(string u1, string u2) 
+        {
+            var u1Id = GetUserByUsername(u1).UserId;
+            var u2Id = GetUserByUsername(u2).UserId;
+
+            var connection1 = _context.Friends.Where(x => x.CurrentUserId == u1Id && x.OtherUserId == u2Id).FirstOrDefault();
+            var connection2 = _context.Friends.Where(x => x.CurrentUserId == u2Id && x.OtherUserId == u1Id).FirstOrDefault();
+
+            if (connection1 == null)
+            {
+                _context.Friends.Add(new FriendsList
+                {
+                    CurrentUserId = u1Id,
+                    OtherUserId = u2Id,
+                    isPending = false,
+                    isDeleted = false
+                });
+            }
+            else
+            {
+                connection1.isPending = false;
+                _context.SaveChanges();
+                return true;
+            }
+            if (connection2 == null)
+            {
+                _context.Friends.Add(new FriendsList
+                {
+                    CurrentUserId = u2Id,
+                    OtherUserId = u1Id,
+                    isPending = true,
+                    isDeleted = false
+                });
+            }
+            else
+            {
+                connection2.isPending = true;
+            }
+            _context.SaveChanges();
+            return false;
+        }
+        private void CreateFriendConnection(Guid user1, Guid user2)
         {
             _context.Friends.Add(new FriendsList
             {

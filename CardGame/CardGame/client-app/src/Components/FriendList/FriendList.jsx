@@ -1,5 +1,6 @@
+import Button from '@restart/ui/esm/Button';
 import { useEffect, useState } from 'react';
-import { ListGroup } from 'react-bootstrap';
+import { ListGroup, Modal } from 'react-bootstrap';
 import './FriendList.css';
 
 const title_style = {
@@ -8,6 +9,8 @@ const title_style = {
 
 const FriendList = (props) => {
   const { friendHub, friends, setFriends } = props;
+  const [addModal, setAddModal] = useState(false);
+  const [newFriend, setNewFriend] = useState('');
   // Only update when first created
   useEffect(() => {
     if (friendHub) {
@@ -31,7 +34,14 @@ const FriendList = (props) => {
       });
     }
   }, [friendHub]);
-
+  const AddFriend = () => {
+    if (newFriend != '' && friendHub) {
+      friendHub.send('FriendRequest', newFriend);
+    } else {
+      console.log('ERR sending friend request');
+    }
+    setAddModal(false);
+  };
   return (
     <div className='FriendList'>
       <h1 style={title_style}>Friends</h1>
@@ -51,6 +61,25 @@ const FriendList = (props) => {
           }
         })}
       </ListGroup>
+      <Button
+        onClick={() => {
+          setAddModal(true);
+        }}
+      >
+        +
+      </Button>
+      <Modal show={addModal}>
+        <Modal.Header>Add Friend</Modal.Header>
+        <Modal.Body>
+          <input
+            type='text'
+            onChange={(e) => setNewFriend(e.target.value)}
+            placeholder='Username'
+          ></input>
+          <Button onClick={() => AddFriend()}>Submit</Button>
+          <Button onClick={() => setAddModal(false)}>Cancel</Button>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };

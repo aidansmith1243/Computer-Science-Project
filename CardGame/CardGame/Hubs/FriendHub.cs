@@ -39,6 +39,27 @@ namespace CardGame.Hubs
             return Task.CompletedTask;
 
         }
+        public Task FriendRequest(string user)
+        {
+            var me = GetUser();
+            var friend = _cardGameRepository.GetUserByUsername(user);
+            if (me == null || friend == null) return Task.CompletedTask;
+
+            Console.WriteLine($"Friend Request {me.Username} to {user}");
+            // Add friend in db and send invite
+            var newFriend = _cardGameRepository.AddFriend(me.Username, user);
+            if (newFriend) Clients.Group(user).SendAsync("FriendRequest", me.Username);
+
+            // Join friends group to get online updates
+            Groups.AddToGroupAsync(Context.ConnectionId, friend.UserId.ToString());
+
+            return Task.CompletedTask;
+        }
+        //public Task FriendSearch(string search)
+        //{
+        //    var possibleUsers = _cardGameRepository.GetUsers
+        //    return Task.CompletedTask;
+        //}
         public Task GameInvite(string user,string game,bool valid)
         {
             //Console.WriteLine($"GameInvite {user}, {game}, {valid}");
@@ -72,7 +93,7 @@ namespace CardGame.Hubs
             // Update all my Friends I am online
             Clients.Group(userId).SendAsync("UpdateFriendList", user.Username, true);
             
-            // Get current online users
+            // Get users friends
             foreach(var friend in _cardGameRepository.GetFriends(userId))
             {
                 Clients.Client(Context.ConnectionId).SendAsync("UpdateFriendList", friend.Username, friend.isOnline);
@@ -84,6 +105,12 @@ namespace CardGame.Hubs
             {
                 Console.WriteLine($"User: {user.Username} Joined Group: {friend.Username}");
                 Groups.AddToGroupAsync(Context.ConnectionId, friend.UserId.ToString());
+            }
+
+            // Get all pending friend requests
+            foreach(var f in _cardGameRepository.GetPendingInvites(user.UserId.ToString()))
+            {
+                Clients.Client(Context.ConnectionId).SendAsync("FriendRequest", f);
             }
 
             // Join my group to receive game invites

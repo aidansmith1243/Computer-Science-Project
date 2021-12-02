@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Card, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import FriendList from '../FriendList/FriendList';
 import './Notification.css';
 
 const Notification = (props) => {
@@ -16,12 +17,24 @@ const Notification = (props) => {
             {
               user: user,
               game: game,
+              isFriendRequest: false,
             },
           ]);
         } else {
           setNotifications(notifications.filter((i) => i.user !== user));
           setShowLoading({ value: false, user: null });
         }
+      });
+      friendHub.on('FriendRequest', (user) => {
+        console.log('FriendRequest', user);
+        // setNotifications([
+        //   ...notifications,
+        //   {
+        //     user: user,
+        //     game: null,
+        //     isFriendRequest: true,
+        //   },
+        // ]);
       });
       friendHub.on('GameStart', (game, id) => {
         setGameId(id);
@@ -65,7 +78,7 @@ const Notification = (props) => {
             style={{ fontSize: '15px', marginTop: '5px', marginBottom: '-5px' }}
           >
             {' '}
-            {notif.user} wants to play {notif.game}
+            {notif.user} wants to play {notif.game} {notif.isFriendRequest}
           </Card.Title>
           <Card.Body>
             <Button
