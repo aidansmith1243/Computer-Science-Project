@@ -13,7 +13,9 @@ const TopBar = (props) => {
   return (
     <Navbar style={title_style} fixed='top'>
       <Container>
-        <Navbar.Brand onClick={() => navigate('/')}>Card Game</Navbar.Brand>
+        <Navbar.Brand onClick={() => navigate('/')}>
+          Shuffle Box Royale
+        </Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse className='justify-content-end'>
           {user ? (

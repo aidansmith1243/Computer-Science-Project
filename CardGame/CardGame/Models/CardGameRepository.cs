@@ -96,6 +96,7 @@ namespace CardGame.Models
 
             if (connection1 == null)
             {
+                Console.WriteLine("section 1");
                 _context.Friends.Add(new FriendsList
                 {
                     CurrentUserId = u1Id,
@@ -106,12 +107,14 @@ namespace CardGame.Models
             }
             else
             {
+                Console.WriteLine("section 2");
                 connection1.isPending = false;
                 _context.SaveChanges();
                 return true;
             }
             if (connection2 == null)
             {
+                Console.WriteLine("section 3");
                 _context.Friends.Add(new FriendsList
                 {
                     CurrentUserId = u2Id,
@@ -122,6 +125,7 @@ namespace CardGame.Models
             }
             else
             {
+                Console.WriteLine("section 4");
                 connection2.isPending = true;
             }
             _context.SaveChanges();
