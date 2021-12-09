@@ -42,7 +42,6 @@ const InviteModal = (props) => {
         setInviteDisabled(true);
       }
     }
-    console.log(`Game: ${show.game}, length: ${invitedFriends.length + 1}`);
   }, [invitedFriends]);
 
   const handleCancelInvite = (e) => {
@@ -117,8 +116,9 @@ const InviteModal = (props) => {
         <ListGroup style={{ marginTop: '10px' }}>
           {invitedFriends.map((u) => (
             <div key={u.user}>
-              <ListGroup.Item>{u.user}</ListGroup.Item>
-              <p>{u.didAccept ? 'Ready' : 'Pending'}</p>
+              <ListGroup.Item>
+                {u.user + (u.didAccept ? '' : ' (Pending)')}
+              </ListGroup.Item>
             </div>
           ))}
         </ListGroup>

@@ -28,21 +28,6 @@ const GameSelection = (props) => {
             invite={handlePlay}
           />
         ))}
-
-        {/* <GameCard
-          title='Hearts'
-          link='/Hearts'
-          info='https://en.wikipedia.org/wiki/Hearts_(card_game)'
-          players='4'
-          invite={handlePlay}
-        />
-        <GameCard
-          title='Crazy Eights'
-          link='/Crazy_Eights'
-          info='https://en.wikipedia.org/wiki/Crazy_Eights'
-          players='2+'
-          invite={handlePlay}
-        /> */}
       </div>
     </div>
   );
