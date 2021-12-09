@@ -4,7 +4,7 @@
       "title": "Hearts",
       "link": "/Hearts",
       "info": "https://en.wikipedia.org/wiki/Hearts_(card_game)",
-      "minPlayers": 2,
+      "minPlayers": 4,
       "maxPlayers": 4
     },
     {

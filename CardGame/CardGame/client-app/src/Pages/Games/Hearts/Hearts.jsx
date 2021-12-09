@@ -58,7 +58,7 @@ const Hearts = (props) => {
     setMyHandPlayCard(ConvertCard(state.Player.CenterSlot));
     setMyName(state.Player.Name);
     setMyScore(state.Player.Score);
-    if (myTurnOrder == -1) setMyTurnOrder(state.Player.PlayerOrder);
+    if (myTurnOrder === -1) setMyTurnOrder(state.Player.PlayerOrder);
 
     // Op1
     const op1 = state.Others.find((x) => x.PlayerOrder === (myOrder + 1) % 4);
@@ -69,7 +69,7 @@ const Hearts = (props) => {
     setOp1HandPlayCard(ConvertCard(op1.CardSlot));
     setOp1Name(op1.Name);
     setOp1Score(op1.Score);
-    if (op1TurnOrder == -1) setOp1TurnOrder(op1.PlayerOrder);
+    if (op1TurnOrder === -1) setOp1TurnOrder(op1.PlayerOrder);
     // Op2
     const op2 = state.Others.find((x) => x.PlayerOrder === (myOrder + 2) % 4);
     const cards2 = [];
@@ -79,7 +79,7 @@ const Hearts = (props) => {
     setOp2HandPlayCard(ConvertCard(op2.CardSlot));
     setOp2Name(op2.Name);
     setOp2Score(op2.Score);
-    if (op2TurnOrder == -1) setOp2TurnOrder(op2.PlayerOrder);
+    if (op2TurnOrder === -1) setOp2TurnOrder(op2.PlayerOrder);
     // Op3
     const op3 = state.Others.find((x) => x.PlayerOrder === (myOrder + 3) % 4);
     const cards3 = [];
@@ -90,7 +90,7 @@ const Hearts = (props) => {
     setOp3HandPlayCard(ConvertCard(op3.CardSlot));
     setOp3Name(op3.Name);
     setOp3Score(op3.Score);
-    if (op3TurnOrder == -1) setOp3TurnOrder(op3.PlayerOrder);
+    if (op3TurnOrder === -1) setOp3TurnOrder(op3.PlayerOrder);
   };
 
   const ValidateGameState = () => {};
@@ -228,7 +228,7 @@ const Hearts = (props) => {
             position: 'absolute',
             top: '790px',
             left: '190px',
-            color: currentTurn == myTurnOrder ? 'gold' : 'black',
+            color: currentTurn === myTurnOrder ? 'gold' : 'black',
           }}
         >
           {myName} - {myScore}
@@ -258,7 +258,7 @@ const Hearts = (props) => {
               position: 'absolute',
               top: '140px',
               left: '40px',
-              color: currentTurn == op1TurnOrder ? 'gold' : 'black',
+              color: currentTurn === op1TurnOrder ? 'gold' : 'black',
             }}
           >
             {op1Name} - {op1Score}
@@ -288,7 +288,7 @@ const Hearts = (props) => {
               position: 'absolute',
               top: '0px',
               left: '190px',
-              color: currentTurn == op2TurnOrder ? 'gold' : 'black',
+              color: currentTurn === op2TurnOrder ? 'gold' : 'black',
             }}
           >
             {op2Name} - {op2Score}
@@ -318,7 +318,7 @@ const Hearts = (props) => {
               position: 'absolute',
               top: '140px',
               left: '670px',
-              color: currentTurn == op3TurnOrder ? 'gold' : 'black',
+              color: currentTurn === op3TurnOrder ? 'gold' : 'black',
             }}
           >
             {op3Name} - {op3Score}

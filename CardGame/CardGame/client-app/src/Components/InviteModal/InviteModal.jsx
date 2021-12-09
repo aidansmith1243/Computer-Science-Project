@@ -13,18 +13,38 @@ const InviteModal = (props) => {
     setInvitedFriends,
   } = props;
   const [playDisabled, setPlayDisabled] = useState(true);
+  const [inviteDisabled, setInviteDisabled] = useState(false);
 
   useEffect(() => {
-    if (
-      show.game &&
-      invitedFriends.filter((x) => x.didAccept).length + 1 >=
-        Games['games'].filter((x) => x.title === show.game)[0].minPlayers
-    ) {
-      setPlayDisabled(false);
-    } else {
+    let currentGameInfo = Games['games'].filter((x) => x.title === show.game);
+
+    if (currentGameInfo.length !== 1) {
       setPlayDisabled(true);
+      setInviteDisabled(false);
+    } else {
+      currentGameInfo = currentGameInfo[0];
+
+      // set playDisabled
+      console.log(invitedFriends);
+      if (
+        invitedFriends.filter((x) => x.didAccept).length + 1 >=
+        currentGameInfo.minPlayers
+      ) {
+        setPlayDisabled(false);
+      } else {
+        setPlayDisabled(true);
+      }
+
+      // set inviteDisabled
+      if (invitedFriends.length + 1 < currentGameInfo.maxPlayers) {
+        setInviteDisabled(false);
+      } else {
+        setInviteDisabled(true);
+      }
     }
+    console.log(`Game: ${show.game}, length: ${invitedFriends.length + 1}`);
   }, [invitedFriends]);
+
   const handleCancelInvite = (e) => {
     if (invitedFriends.length > 0) {
       if (!friendHub._connectionStarted) {
@@ -34,7 +54,7 @@ const InviteModal = (props) => {
         friendHub.send('GameInvite', e.user, show.game, false);
       });
     }
-    setInvitedFriends([]);
+    setInvitedFriends((x) => []);
     setShow({ value: false, game: null });
   };
   const handleInvite = (e, user) => {
@@ -68,7 +88,11 @@ const InviteModal = (props) => {
       <Modal.Header>Invite Friends to play {show.game}</Modal.Header>
       <Modal.Body>
         <Dropdown>
-          <Dropdown.Toggle variant='success' id='dropdown-basic'>
+          <Dropdown.Toggle
+            variant='success'
+            id='dropdown-basic'
+            disabled={inviteDisabled}
+          >
             Select Friend
           </Dropdown.Toggle>
 
