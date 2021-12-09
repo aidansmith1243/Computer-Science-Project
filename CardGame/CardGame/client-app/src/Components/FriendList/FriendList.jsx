@@ -36,7 +36,7 @@ const FriendList = (props) => {
   }, [friendHub]);
   const AddFriend = () => {
     if (newFriend != '' && friendHub) {
-      friendHub.send('FriendRequest', newFriend);
+      friendHub.send('FriendRequest', newFriend, true);
     } else {
       console.log('ERR sending friend request');
     }

@@ -78,15 +78,16 @@ namespace CardGame.Models
         }
         public List<string> GetPendingInvites(string userId)
         {
-            var friendIds = _context.Friends.Where(x => x.CurrentUserId.ToString() == userId && x.isPending).Select(x => x.OtherUserId).ToList();
+            var friendIds = _context.Friends.Where(x => x.CurrentUserId.ToString() == userId && x.isPending && !x.isDeleted).Select(x => x.OtherUserId).ToList();
             List<string> friends = new List<string>();
             foreach(var x in friendIds)
             {
                 friends.Add(GetUserById(x.ToString()).Username);
+                
             }
             return friends;
         }
-        public bool AddFriend(string u1, string u2) 
+        public bool AddFriend(string u1, string u2,bool shouldCreate) 
         {
             var u1Id = GetUserByUsername(u1).UserId;
             var u2Id = GetUserByUsername(u2).UserId;
@@ -94,7 +95,9 @@ namespace CardGame.Models
             var connection1 = _context.Friends.Where(x => x.CurrentUserId == u1Id && x.OtherUserId == u2Id).FirstOrDefault();
             var connection2 = _context.Friends.Where(x => x.CurrentUserId == u2Id && x.OtherUserId == u1Id).FirstOrDefault();
 
-            if (connection1 == null)
+            var isNewRequest = false; // if this is a request that should be sent to the other member
+
+            if (connection1 == null) // u1 invites u2 to be friend
             {
                 Console.WriteLine("section 1");
                 _context.Friends.Add(new FriendsList
@@ -102,17 +105,23 @@ namespace CardGame.Models
                     CurrentUserId = u1Id,
                     OtherUserId = u2Id,
                     isPending = false,
-                    isDeleted = false
+                    isDeleted = !shouldCreate
                 });
+                isNewRequest = true;
             }
-            else
+            else // u1 accepts friend request
             {
                 Console.WriteLine("section 2");
                 connection1.isPending = false;
-                _context.SaveChanges();
-                return true;
+                connection1.isDeleted = !shouldCreate;
+                //_context.SaveChanges();
+                if (shouldCreate)
+                {
+                    _context.SaveChanges();
+                    return isNewRequest;
+                }
             }
-            if (connection2 == null)
+            if (connection2 == null) // generate u2 request 
             {
                 Console.WriteLine("section 3");
                 _context.Friends.Add(new FriendsList
@@ -120,16 +129,18 @@ namespace CardGame.Models
                     CurrentUserId = u2Id,
                     OtherUserId = u1Id,
                     isPending = true,
-                    isDeleted = false
+                    isDeleted = !shouldCreate
                 });
+                isNewRequest = true;
             }
-            else
+            else // used for declining the second connection
             {
                 Console.WriteLine("section 4");
                 connection2.isPending = true;
+                connection2.isDeleted = !shouldCreate;
             }
             _context.SaveChanges();
-            return false;
+            return isNewRequest && shouldCreate;
         }
         private void CreateFriendConnection(Guid user1, Guid user2)
         {
@@ -161,7 +172,7 @@ namespace CardGame.Models
         {
             var friendConnections = _context.Friends.Where(
                 u => u.CurrentUserId.ToString() == userId 
-                && !u.isPending );
+                && !u.isPending && !u.isDeleted);
             var friends = (from f in friendConnections
                           join u in _context.User on f.OtherUserId equals u.UserId
                           select u).ToList();

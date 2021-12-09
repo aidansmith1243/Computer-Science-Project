@@ -39,19 +39,31 @@ namespace CardGame.Hubs
             return Task.CompletedTask;
 
         }
-        public Task FriendRequest(string user)
+        public Task FriendRequest(string user,bool isAccepted)
         {
             var me = GetUser();
             var friend = _cardGameRepository.GetUserByUsername(user);
             if (me == null || friend == null) return Task.CompletedTask;
 
-            Console.WriteLine($"Friend Request {me.Username} to {user}");
+            Console.WriteLine($"Friend Request {me.Username} to {user} with {isAccepted}");
             // Add friend in db and send invite
-            var newFriend = _cardGameRepository.AddFriend(me.Username, user);
-            if (newFriend) Clients.Group(user).SendAsync("FriendRequest", me.Username);
+            var isNewFriend = _cardGameRepository.AddFriend(me.Username, user, isAccepted);
+            if (isNewFriend) 
+            { 
+                Clients.Group(user).SendAsync("FriendRequest", me.Username);
 
-            // Join friends group to get online updates
-            Groups.AddToGroupAsync(Context.ConnectionId, friend.UserId.ToString());
+                // Join friends group to get online updates
+                Groups.AddToGroupAsync(Context.ConnectionId, friend.UserId.ToString());
+            }
+            else if (isAccepted)
+            {
+                // Join friends group to get online updates
+                Groups.AddToGroupAsync(Context.ConnectionId, friend.UserId.ToString());
+
+                // if the friendship is accepted, update their friend lists
+                Clients.Group(me.UserId.ToString()).SendAsync("UpdateFriendList", me.Username, me.isOnline);
+                Clients.Group(friend.UserId.ToString()).SendAsync("UpdateFriendList", friend.Username, friend.isOnline);
+            }
 
             return Task.CompletedTask;
         }
