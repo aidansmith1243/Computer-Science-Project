@@ -1,0 +1,18 @@
+{
+  "games": [
+    {
+      "title": "Hearts",
+      "link": "/Hearts",
+      "info": "https://en.wikipedia.org/wiki/Hearts_(card_game)",
+      "minPlayers": 2,
+      "maxPlayers": 4
+    },
+    {
+      "title": "Crazy Eights",
+      "link": "/Crazy_Eights",
+      "info": "https://en.wikipedia.org/wiki/Crazy_Eights",
+      "minPlayers": 2,
+      "maxPlayers": 4
+    }
+  ]
+}

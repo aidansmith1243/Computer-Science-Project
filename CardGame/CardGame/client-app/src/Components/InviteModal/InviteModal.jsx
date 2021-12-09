@@ -1,6 +1,7 @@
 import { Modal, Button, Dropdown, ListGroup } from 'react-bootstrap';
 import './InviteModal.css';
 import { useEffect, useState } from 'react';
+import Games from '../../Data/Games.json';
 
 const InviteModal = (props) => {
   const {
@@ -11,7 +12,19 @@ const InviteModal = (props) => {
     invitedFriends,
     setInvitedFriends,
   } = props;
+  const [playDisabled, setPlayDisabled] = useState(true);
 
+  useEffect(() => {
+    if (
+      show.game &&
+      invitedFriends.filter((x) => x.didAccept).length + 1 >=
+        Games['games'].filter((x) => x.title === show.game)[0].minPlayers
+    ) {
+      setPlayDisabled(false);
+    } else {
+      setPlayDisabled(true);
+    }
+  }, [invitedFriends]);
   const handleCancelInvite = (e) => {
     if (invitedFriends.length > 0) {
       if (!friendHub._connectionStarted) {
@@ -93,7 +106,9 @@ const InviteModal = (props) => {
         >
           Cancel
         </Button>
-        <Button onClick={(e) => handlePlay(e)}>Play</Button>
+        <Button onClick={(e) => handlePlay(e)} disabled={playDisabled}>
+          Play
+        </Button>
       </Modal.Footer>
     </Modal>
   );

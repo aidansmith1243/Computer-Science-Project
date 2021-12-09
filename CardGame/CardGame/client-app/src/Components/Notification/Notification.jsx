@@ -42,7 +42,7 @@ const Notification = (props) => {
       });
       friendHub.on('GameStart', (game, id) => {
         setGameId(id);
-        navigate('/hearts'); // todo - change to game path not hard code hearts
+        navigate(`/${game.replace(' ', '_')}`);
       });
     }
   }, [friendHub]);

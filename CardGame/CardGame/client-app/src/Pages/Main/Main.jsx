@@ -35,13 +35,16 @@ const Main = (props) => {
         console.log(user, didAccept);
 
         setInvitedFriends((arr) =>
-          arr.map((x) => {
-            if (x.user === user) {
-              x.didAccept = didAccept;
-              return x;
-            }
-            return x;
-          })
+          arr
+            .map((x) => {
+              if (x.user === user) {
+                x.didAccept = didAccept;
+                if (didAccept) return x;
+              } else {
+                return x;
+              }
+            })
+            .filter((x) => x)
         );
       });
 
