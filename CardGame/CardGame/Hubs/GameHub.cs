@@ -68,7 +68,13 @@ namespace CardGame.Hubs
             Console.WriteLine("Game Update");
             foreach(var eachUser in game.Players)
                 Clients.Groups(eachUser).SendAsync("GameUpdate",move, game.GetGameState(eachUser));
-            
+
+            Console.WriteLine("Game Over");
+            if(game.GameCompleted)
+            {
+                foreach (var eachUser in game.Players)
+                    Clients.Groups(eachUser).SendAsync("GameOver", game.GetGameState(eachUser));
+            }
             return Task.CompletedTask;
         }
         public override Task OnConnectedAsync()

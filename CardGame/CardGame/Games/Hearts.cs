@@ -86,25 +86,29 @@ namespace CardGame.Games
 
             HeartPlayer curPlayer = playerData.Where(p => p.Name == player).FirstOrDefault();
 
-
+            List<Card> startingCenterCards = playerData.Where(x => x.CenterSlot != null).Select(x => x.CenterSlot).ToList();
             // validate move
-            if( curPlayer.PlayerOrder == CurrentTurn &&
+            if ( curPlayer.PlayerOrder == CurrentTurn &&
                 curPlayer.Hand.CardDeck.Contains(playedCard) && 
-                curPlayer.CenterSlot == null)
+                (curPlayer.CenterSlot == null || startingCenterCards.Count >=4 ))
             {
-                // First card played
-                if(StartingCard == null)
+                // first card played
+                if(startingCenterCards.Count >= 4 || StartingCard == null)
                 {
-                    // Check if I can play heart
-                    if(
-                        playedCard.SUIT == 'H' && 
-                        !AllowHearts && 
+                    //StartingCard = null;
+                    foreach (var x in playerData)
+                    {
+                        x.CenterSlot = null;
+                    }
+                    if (
+                        playedCard.SUIT == 'H' &&
+                        !AllowHearts &&
                         curPlayer.Hand.CardDeck.Where(x => x.SUIT == 'H').ToList().Count != curPlayer.Hand.CardDeck.Count
                         )
                     {
                         return false;
                     }
-                    
+
                     StartingCard = playedCard;
                 }
                 // Not first Card down
@@ -124,10 +128,14 @@ namespace CardGame.Games
                 curPlayer.CenterSlot = playedCard;
                 validMove = true;
             }
+            else
+            {
+                return false;
+            }
 
             if(validMove) { MoveCount++; CurrentTurn += 1; CurrentTurn %= 4; }
 
-            //Check if 4 cards have been played
+            // Check if 4 cards have been played to calculate score
             List<Card> centerCards = playerData.Where(x => x.CenterSlot != null).Select(x => x.CenterSlot).ToList();
             var RankConvert = new Dictionary<char, int>()
             { {'A',14},{'2',2},{'3',3},{'4',4},{'5',5},{'6',6},{'7',7},{'8',8},{'9',9},{'0',10},{'J',11},{'Q',12},{'K',13} };
@@ -135,20 +143,16 @@ namespace CardGame.Games
             if (centerCards.Count >= 4)
             {
                 var winner = playerData
-                    .Where(x => x.CenterSlot.SUIT == playedCard.SUIT)
+                    .Where(x => x.CenterSlot.SUIT == StartingCard.SUIT)
                     .OrderByDescending(x=> RankConvert[x.CenterSlot.RANK])
                     .FirstOrDefault();
                 winner.Score += centerCards.Where(x => x.SUIT == 'H').ToList().Count;
                 CurrentTurn = winner.PlayerOrder;
-                //var rankedCards = centerCards.Where(x => x.SUIT == playedCard.SUIT).Select(x => RankConvert[x.SUIT]).ToArray();
-                //var max = rankedCards.Max();
-
-                StartingCard = null;
-                foreach (var x in playerData)
-                {
-                    x.CenterSlot = null;
-                }
             }
+
+            // Check for game over
+            GameCompleted = playerData.Select(x => x.Hand.CardDeck.Count).Where(x => x == 0).ToList().Count == 4;
+            
 
             return validMove;
         }

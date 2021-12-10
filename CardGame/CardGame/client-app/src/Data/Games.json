@@ -13,6 +13,20 @@
       "info": "https://en.wikipedia.org/wiki/Crazy_Eights",
       "minPlayers": 2,
       "maxPlayers": 4
+    },
+    {
+      "title": "Golf",
+      "link": "/",
+      "info": "",
+      "minPlayers": 4,
+      "maxPlayers": 4
+    },
+    {
+      "title": "Double Solitaire",
+      "link": "/",
+      "info": "",
+      "minPlayers": 2,
+      "maxPlayers": 2
     }
   ]
 }

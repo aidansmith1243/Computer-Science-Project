@@ -14,6 +14,7 @@ namespace CardGame.Games.Helpers
         public int MoveCount { get; set; }
         public Deck Deck { get; set; }
 
+        public bool GameCompleted { get; set; }
 
         protected string gameState;
 
@@ -28,6 +29,7 @@ namespace CardGame.Games.Helpers
             MoveCount = 0;
             gameState = "";
             Deck = new Deck();
+            GameCompleted = false;
         }
 
     }

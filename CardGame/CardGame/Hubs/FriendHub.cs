@@ -144,7 +144,7 @@ namespace CardGame.Hubs
             var userId = user.UserId.ToString();
 
             // Save online status to database
-            _cardGameRepository.SetOnlineStatus(userId, true);
+            _cardGameRepository.SetOnlineStatus(userId, false);
 
             // Update all my friends I am offline
             Clients.Group(userId).SendAsync("UpdateFriendList", user.Username, false);
