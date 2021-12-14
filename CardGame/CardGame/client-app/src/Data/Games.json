@@ -11,7 +11,7 @@
       "title": "Crazy Eights",
       "link": "/Crazy_Eights",
       "info": "https://en.wikipedia.org/wiki/Crazy_Eights",
-      "minPlayers": 1,
+      "minPlayers": 2,
       "maxPlayers": 4
     },
     {
