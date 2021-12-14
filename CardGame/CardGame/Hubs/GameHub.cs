@@ -69,9 +69,10 @@ namespace CardGame.Hubs
             foreach(var eachUser in game.Players)
                 Clients.Groups(eachUser).SendAsync("GameUpdate",move, game.GetGameState(eachUser));
 
-            Console.WriteLine("Game Over");
+            
             if(game.GameCompleted)
             {
+                Console.WriteLine("Game Over");
                 foreach (var eachUser in game.Players)
                     Clients.Groups(eachUser).SendAsync("GameOver", game.GetGameState(eachUser));
             }

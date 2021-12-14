@@ -65,7 +65,11 @@ namespace CardGame.Games.Helpers
         }
         public void ArrangeCardsSuitOrder()
         {
-            CardDeck = CardDeck.OrderBy(x => x.SUIT).ThenBy(x => x.RANK).ToList();
+            var RankConvert = new Dictionary<char, int>()
+            { {'A',14},{'2',2},{'3',3},{'4',4},{'5',5},{'6',6},{'7',7},{'8',8},{'9',9},{'0',10},{'J',11},{'Q',12},{'K',13} };
+            var SuitConvert = new Dictionary<char, int>()
+            { {'D',1},{'C',2},{'H',3},{'S',4}};
+            CardDeck = CardDeck.OrderBy(x => SuitConvert[x.SUIT]).ThenBy(x => RankConvert[x.RANK]).ToList();
         }
     }
 }

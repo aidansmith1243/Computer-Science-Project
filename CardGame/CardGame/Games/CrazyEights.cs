@@ -61,35 +61,46 @@ namespace CardGame.Games
             //validate current player
             CrazyEightsPlayer curPlayer = playerData.Where(p => p.Name == player).FirstOrDefault();
             if (curPlayer.PlayerOrder != CurrentTurn)
+            {
+                Console.WriteLine("Section: invalid player turn");
                 return validMove;
+            }
 
             Card playedCard;
             if (move == "draw")
             {
+                Console.WriteLine("Section: Drawing");
                 // Replace the draw deck
                 if(Deck.CardDeck.Count == 0)
                 {
+                    Console.WriteLine("Section: ReplaceDraw");
                     var index = Deck.DiscardDeck.Count - 1;
 
                     var topCard = Deck.DiscardDeck[index];
                     Deck.DiscardDeck.RemoveAt(index);
                     Deck.ReShuffle();
                     Deck.DiscardDeck.Add(topCard);
-                    //todo: add condition if out of cards
+                    if(Deck.CardDeck.Count == 0)
+                    {
+                        GameCompleted = true;
+                        return false;
+                    }
                 }
 
                 curPlayer.Hand.CardDeck.Add(Deck.Draw());
                 curPlayer.Hand.ArrangeCardsSuitOrder();
-                validMove = true;
+                return true;
             }
             else
             {
                 try
                 {
+                    Console.WriteLine("Section: converting card");
                     playedCard = parseJsonToCard(move);
                 }
                 catch
                 {
+                    Console.WriteLine("Section: Error parsing card");
                     return validMove;
                 }
                 var currentTopCard = Deck.DiscardDeck.LastOrDefault();
@@ -105,7 +116,15 @@ namespace CardGame.Games
             {
                 MoveCount++;
                 CurrentTurn += 1; 
-                CurrentTurn %= 4;
+                CurrentTurn %= playerData.Count;
+            }
+            foreach(var p in playerData)
+            {
+                if(p.Hand.CardDeck.Count == 0)
+                {
+                    GameCompleted = true;
+                    break;
+                }
             }
             return validMove;
         }
@@ -124,9 +143,9 @@ namespace CardGame.Games
             Card playedCard;
             try
             {
-                char s = mov.suit.ToString()[0];
-                char r = mov.rank.ToString()[
-                    mov.rank.ToString().Length == 2 ? 1 : 0
+                char s = mov.SUIT.ToString()[0];
+                char r = mov.RANK.ToString()[
+                    mov.RANK.ToString().Length == 2 ? 1 : 0
                 ];
 
                 playedCard = new Card(r, s);

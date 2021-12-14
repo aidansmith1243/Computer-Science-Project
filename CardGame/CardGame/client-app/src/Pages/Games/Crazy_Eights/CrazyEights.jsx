@@ -6,6 +6,80 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import Hand from '../../../Components/Card/Hand/Hand';
 import CardSlot from '../../../Components/CardSlot/CardSlot';
 
+const NameTitle = (props) => {
+  const spot = props.spot;
+  const gameState = props.gameState;
+  let location = {};
+  let color = 'black';
+  const currentTurn = gameState.CurrentTurn;
+  const numPlayers = gameState.Others.length + 1;
+  const bottomPlayerOrder = gameState.Player.PlayerOrder;
+  let name = '';
+  let shouldShow = true;
+
+  switch (spot) {
+    case 'LEFT':
+      location = { top: '140px', left: '40px' };
+      if (numPlayers > 2)
+        name = gameState.Others.filter(
+          (x) => x.PlayerOrder === (bottomPlayerOrder + 1) % numPlayers
+        )[0].Name;
+      else shouldShow = false;
+      if (currentTurn === (bottomPlayerOrder + 1) % numPlayers) color = 'gold';
+      break;
+    case 'TOP':
+      location = { top: '0px', left: '550px' };
+      if (numPlayers === 2 || numPlayers === 4)
+        name = gameState.Others.filter(
+          (x) =>
+            x.PlayerOrder ===
+            (bottomPlayerOrder + (numPlayers === 2 ? 1 : 2)) % numPlayers
+        )[0].Name;
+      else shouldShow = false;
+      if (
+        currentTurn ===
+        (bottomPlayerOrder + (numPlayers === 2 ? 1 : 2)) % numPlayers
+      )
+        color = 'gold';
+      break;
+    case 'BOTTOM':
+      name = gameState.Player.Name;
+      if (currentTurn === bottomPlayerOrder) color = 'gold';
+      location = { top: '795px', left: '195px' };
+
+      break;
+    case 'RIGHT':
+      location = { top: '640px', left: '680px' };
+      if (numPlayers > 2)
+        name = gameState.Others.filter(
+          (x) =>
+            x.PlayerOrder ===
+            (bottomPlayerOrder + (numPlayers === 3 ? 2 : 3)) % numPlayers
+        )[0].Name;
+      else shouldShow = false;
+      if (
+        currentTurn ===
+        (bottomPlayerOrder + (numPlayers === 3 ? 2 : 3)) % numPlayers
+      )
+        color = 'gold';
+      break;
+  }
+
+  return shouldShow ? (
+    <h4
+      style={{
+        position: 'absolute',
+        ...location,
+        color: color,
+      }}
+    >
+      {name}
+    </h4>
+  ) : (
+    <div />
+  );
+};
+
 const CrazyEights = (props) => {
   const { gameId } = props;
   const [gameConnection, setGameConnection] = useState(null);
@@ -42,9 +116,6 @@ const CrazyEights = (props) => {
 
       newConnection.on('GameUpdate', (m, gameState) => {
         const state = JSON.parse(gameState);
-        const move = JSON.parse(m);
-        move.RANK = move.rank;
-        move.SUIT = move.suit;
         console.log('GameUpdate', state);
 
         setGameState(state);
@@ -107,7 +178,8 @@ const CrazyEights = (props) => {
     if (!gameConnection._connectionStarted) {
       await gameConnection.start();
     }
-    gameConnection.send('Play', gameId, JSON.stringify(card));
+    if (card === 'draw') gameConnection.send('Play', gameId, card);
+    else gameConnection.send('Play', gameId, JSON.stringify(card));
     console.log('play', card);
   };
 
@@ -132,6 +204,79 @@ const CrazyEights = (props) => {
     }
   };
 
+  const createName = (spot, _) => {
+    let location = {};
+    let color = 'black';
+    const currentTurn = gameState.CurrentTurn;
+    const numPlayers = gameState.Others.length + 1;
+    const bottomPlayerOrder = gameState.Player.PlayerOrder;
+    let name = '';
+    let shouldShow = true;
+
+    switch (spot) {
+      case 'LEFT':
+        location = { top: '140px', left: '40px' };
+        if (numPlayers > 2)
+          name = gameState.Others.filter(
+            (x) => x.PlayerOrder === (bottomPlayerOrder + 1) % numPlayers
+          )[0].Name;
+        else shouldShow = false;
+        if (currentTurn === (bottomPlayerOrder + 1) % numPlayers)
+          color = 'gold';
+        break;
+      case 'TOP':
+        location = { top: '0px', left: '550px' };
+        if (numPlayers === 2 || numPlayers === 4)
+          name = gameState.Others.filter(
+            (x) =>
+              x.PlayerOrder ===
+              (bottomPlayerOrder + (numPlayers === 2 ? 1 : 2)) % numPlayers
+          )[0].Name;
+        else shouldShow = false;
+        if (
+          currentTurn ===
+          bottomPlayerOrder + ((numPlayers === 2 ? 1 : 2) % numPlayers)
+        )
+          color = 'gold';
+        break;
+      case 'BOTTOM':
+        name = gameState.Player.Name;
+        if (currentTurn === bottomPlayerOrder) color = 'gold';
+        location = { top: '795px', left: '195px' };
+
+        break;
+      case 'RIGHT':
+        location = { top: '640px', left: '680px' };
+        if (numPlayers > 2)
+          name = gameState.Others.filter(
+            (x) =>
+              x.PlayerOrder ===
+              (bottomPlayerOrder + (numPlayers === 3 ? 2 : 3)) % numPlayers
+          )[0].Name;
+        else shouldShow = false;
+        if (
+          currentTurn ===
+          (bottomPlayerOrder + (numPlayers === 3 ? 2 : 3)) % numPlayers
+        )
+          color = 'gold';
+        break;
+    }
+
+    return shouldShow ? (
+      <h4
+        style={{
+          position: 'absolute',
+          ...location,
+          color: { color },
+        }}
+      >
+        {name}
+      </h4>
+    ) : (
+      <div />
+    );
+  };
+
   return (
     <div className='CrazyEights'>
       <TopBar />
@@ -143,6 +288,7 @@ const CrazyEights = (props) => {
             id='myHand'
             cards={ConvertCards(gameState.Player?.Hand?.CardDeck)}
           />
+          <NameTitle spot={'BOTTOM'} gameState={gameState} />
 
           <CardSlot
             x={310}
@@ -161,9 +307,11 @@ const CrazyEights = (props) => {
             x={435}
             y={320}
             id='drawPile'
-            card={{ rank: undefined, suit: undefined }}
-            onClick={() => console.log('draw')}
+            card={gameState.DrawPile > 0 ? ConvertCard(1) : undefined}
+            onClick={() => onCardPlayed('draw')}
           />
+
+          {/* LEFT */}
           <div style={{ position: 'absolute', transform: 'rotate(90deg)' }}>
             <Hand
               x={182}
@@ -177,12 +325,15 @@ const CrazyEights = (props) => {
                           x.PlayerOrder ===
                           (gameState.Player.PlayerOrder + 1) %
                             (gameState.Others.length + 1)
-                      )[0].Hand
+                      )[0]?.Hand
                     )
                   : []
               }
             />
           </div>
+          <NameTitle spot={'LEFT'} gameState={gameState} />
+
+          {/* TOP */}
           <div style={{ position: 'absolute', transform: 'rotate(180deg)' }}>
             <Hand
               x={-648}
@@ -197,12 +348,15 @@ const CrazyEights = (props) => {
                           (gameState.Player.PlayerOrder +
                             (gameState.Others.length === 1 ? 1 : 2)) %
                             (gameState.Others.length + 1)
-                      )[0].Hand
+                      )[0]?.Hand
                     )
                   : []
               }
             />
           </div>
+          <NameTitle spot={'TOP'} gameState={gameState} />
+
+          {/* RIGHT */}
           <div style={{ position: 'absolute', transform: 'rotate(-90deg)' }}>
             <Hand
               x={-638}
@@ -217,12 +371,13 @@ const CrazyEights = (props) => {
                           (gameState.Player.PlayerOrder +
                             (gameState.Others.length === 2 ? 2 : 3)) %
                             (gameState.Others.length + 1)
-                      )[0].Hand
+                      )[0]?.Hand
                     )
                   : []
               }
             />
           </div>
+          <NameTitle spot={'RIGHT'} gameState={gameState} />
         </DragDropContext>
       </div>
     </div>

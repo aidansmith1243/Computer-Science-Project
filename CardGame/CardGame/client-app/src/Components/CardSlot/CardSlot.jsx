@@ -12,13 +12,11 @@ const CardSlot = (props) => {
           <div
             ref={provided.innerRef}
             style={{ display: 'flex', padding: 0, height: '140px' }}
+            onClick={onClick}
             {...provided.droppableProps}
           >
             {card ? (
-              <div
-                style={{ top: '-4px', left: '-4px', position: 'absolute' }}
-                onClick={onClick}
-              >
+              <div style={{ top: '-4px', left: '-4px', position: 'absolute' }}>
                 <Card suit={card.suit} rank={card.rank} />
               </div>
             ) : (
