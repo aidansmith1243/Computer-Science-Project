@@ -5,6 +5,7 @@ import TopBar from '../../../Components/TopBar/Topbar';
 import { DragDropContext } from 'react-beautiful-dnd';
 import Hand from '../../../Components/Card/Hand/Hand';
 import CardSlot from '../../../Components/CardSlot/CardSlot';
+import { Modal, Button } from 'react-bootstrap';
 
 const NameTitle = (props) => {
   const spot = props.spot;
@@ -80,11 +81,52 @@ const NameTitle = (props) => {
   );
 };
 
+const GameOverModal = (props) => {
+  const { gameState, gameOver } = props;
+  const CreateScoreboard = () => {
+    let players = [
+      {
+        name: gameState.Player.Name,
+        cards: gameState.Player.Hand.CardDeck.length,
+      },
+    ];
+    for (let i = 0; i < gameState.Others.length; i++) {
+      const p = gameState.Others[i];
+      players.push({ name: p.Name, cards: p.Hand });
+    }
+    players = players.filter((x) => x.cards === 0);
+    const winner = players[0];
+    return winner ? (
+      <div>
+        <p key={winner.name}>{winner.name} has Won!</p>
+      </div>
+    ) : (
+      <div />
+    );
+  };
+  const [board, setBoard] = useState(CreateScoreboard());
+  const navigate = useNavigate();
+  useEffect(() => {
+    setBoard(CreateScoreboard());
+  }, [gameState]);
+
+  return (
+    <Modal show={gameOver}>
+      <Modal.Header>Game Over</Modal.Header>
+      <Modal.Body>{board}</Modal.Body>
+      <Modal.Footer>
+        <Button variant={'primary'} onClick={() => navigate('/')}>
+          Exit
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+};
+
 const CrazyEights = (props) => {
   const { gameId } = props;
   const [gameConnection, setGameConnection] = useState(null);
   const [gameOver, setGameOver] = useState(false);
-  const navigate = useNavigate();
 
   const [gameState, setGameState] = useState({
     CenterSlot: [{ rank: '2', suit: 'D' }],
@@ -166,7 +208,7 @@ const CrazyEights = (props) => {
   };
 
   const ConvertCard = (card) => {
-    if (card == null) return null;
+    if (card === null) return null;
     const finalCard = {
       suit: card.SUIT,
       rank: card.RANK === '0' ? '10' : card.RANK,
@@ -202,79 +244,6 @@ const CrazyEights = (props) => {
       setGameState((_) => gameState);
       onCardPlayed(removedItem);
     }
-  };
-
-  const createName = (spot, _) => {
-    let location = {};
-    let color = 'black';
-    const currentTurn = gameState.CurrentTurn;
-    const numPlayers = gameState.Others.length + 1;
-    const bottomPlayerOrder = gameState.Player.PlayerOrder;
-    let name = '';
-    let shouldShow = true;
-
-    switch (spot) {
-      case 'LEFT':
-        location = { top: '140px', left: '40px' };
-        if (numPlayers > 2)
-          name = gameState.Others.filter(
-            (x) => x.PlayerOrder === (bottomPlayerOrder + 1) % numPlayers
-          )[0].Name;
-        else shouldShow = false;
-        if (currentTurn === (bottomPlayerOrder + 1) % numPlayers)
-          color = 'gold';
-        break;
-      case 'TOP':
-        location = { top: '0px', left: '550px' };
-        if (numPlayers === 2 || numPlayers === 4)
-          name = gameState.Others.filter(
-            (x) =>
-              x.PlayerOrder ===
-              (bottomPlayerOrder + (numPlayers === 2 ? 1 : 2)) % numPlayers
-          )[0].Name;
-        else shouldShow = false;
-        if (
-          currentTurn ===
-          bottomPlayerOrder + ((numPlayers === 2 ? 1 : 2) % numPlayers)
-        )
-          color = 'gold';
-        break;
-      case 'BOTTOM':
-        name = gameState.Player.Name;
-        if (currentTurn === bottomPlayerOrder) color = 'gold';
-        location = { top: '795px', left: '195px' };
-
-        break;
-      case 'RIGHT':
-        location = { top: '640px', left: '680px' };
-        if (numPlayers > 2)
-          name = gameState.Others.filter(
-            (x) =>
-              x.PlayerOrder ===
-              (bottomPlayerOrder + (numPlayers === 3 ? 2 : 3)) % numPlayers
-          )[0].Name;
-        else shouldShow = false;
-        if (
-          currentTurn ===
-          (bottomPlayerOrder + (numPlayers === 3 ? 2 : 3)) % numPlayers
-        )
-          color = 'gold';
-        break;
-    }
-
-    return shouldShow ? (
-      <h4
-        style={{
-          position: 'absolute',
-          ...location,
-          color: { color },
-        }}
-      >
-        {name}
-      </h4>
-    ) : (
-      <div />
-    );
   };
 
   return (
@@ -380,6 +349,7 @@ const CrazyEights = (props) => {
           <NameTitle spot={'RIGHT'} gameState={gameState} />
         </DragDropContext>
       </div>
+      <GameOverModal gameState={gameState} gameOver={gameOver} />
     </div>
   );
 };
