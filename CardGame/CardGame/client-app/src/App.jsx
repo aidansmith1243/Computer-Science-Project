@@ -25,6 +25,10 @@ function App() {
               />
               <Route path='/Hearts' element={<Hearts gameId={gameId} />} />
               <Route
+                path='/Crazy_Eights'
+                element={<CrazyEights gameId={gameId} />}
+              />
+              <Route
                 path='/CrazyEights'
                 element={<CrazyEights gameId={gameId} />}
               />

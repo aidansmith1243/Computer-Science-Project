@@ -61,8 +61,6 @@ const Hearts = (props) => {
         const state = JSON.parse(gameState);
         console.log('InvalidMove', state.Player);
         SetLayoutFromGameState(state, false);
-        //setMyHand(ConvertCards(state.Player.Hand.CardDeck));
-        //setMyHandPlayCard(ConvertCard(state.Player.CenterSlot));
       });
       newConnection.on('GameState', (gameState) => {
         setGameOver(false);

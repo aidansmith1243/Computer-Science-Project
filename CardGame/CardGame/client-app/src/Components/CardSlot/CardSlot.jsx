@@ -3,7 +3,7 @@ import Card from '../Card/Card';
 import './CardSlot.css';
 
 const CardSlot = (props) => {
-  const { x, y, id, card, isPlayable } = props;
+  const { x, y, id, card, isPlayable, onClick } = props;
 
   return (
     <div className='CardSlot' style={{ top: y, left: x }}>
@@ -15,7 +15,10 @@ const CardSlot = (props) => {
             {...provided.droppableProps}
           >
             {card ? (
-              <div style={{ top: '-4px', left: '-4px', position: 'absolute' }}>
+              <div
+                style={{ top: '-4px', left: '-4px', position: 'absolute' }}
+                onClick={onClick}
+              >
                 <Card suit={card.suit} rank={card.rank} />
               </div>
             ) : (
