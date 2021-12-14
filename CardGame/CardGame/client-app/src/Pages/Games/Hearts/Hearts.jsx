@@ -327,8 +327,8 @@ const Hearts = (props) => {
       <div className='Board'>
         <DragDropContext onDragEnd={onDragEnd}>
           <Hand
-            x={160}
-            y={620}
+            x={160 + 32}
+            y={620 + 32}
             id='myHand'
             cards={myHand}
             setCards={setMyHand}
@@ -339,8 +339,8 @@ const Hearts = (props) => {
         <h4
           style={{
             position: 'absolute',
-            top: '790px',
-            left: '190px',
+            top: '795px',
+            left: '195px',
             color: currentTurn === myTurnOrder ? 'gold' : 'black',
           }}
         >
@@ -350,8 +350,8 @@ const Hearts = (props) => {
         <DragDropContext onDragEnd={() => {}}>
           <div style={{ position: 'absolute', transform: 'rotate(90deg)' }}>
             <Hand
-              x={150}
-              y={-200}
+              x={150 + 32}
+              y={-200 + 32}
               id='op1Hand'
               cards={op1Hand}
               setCards={setOp1Hand}
@@ -380,8 +380,8 @@ const Hearts = (props) => {
           {/* Top */}
           <div style={{ position: 'absolute', transform: 'rotate(180deg)' }}>
             <Hand
-              x={-680}
-              y={-200}
+              x={-680 + 32}
+              y={-200 + 32}
               id='op2Hand'
               cards={op2Hand}
               setCards={setOp2Hand}
@@ -410,8 +410,8 @@ const Hearts = (props) => {
           {/* Right */}
           <div style={{ position: 'absolute', transform: 'rotate(-90deg)' }}>
             <Hand
-              x={-670}
-              y={640}
+              x={-670 + 32}
+              y={640 + 32}
               id='op3Hand'
               cards={op3Hand}
               setCards={setOp3Hand}
@@ -429,8 +429,8 @@ const Hearts = (props) => {
           <h4
             style={{
               position: 'absolute',
-              top: '650px',
-              left: '670px',
+              top: '640px',
+              left: '680px',
               color: currentTurn === op3TurnOrder ? 'gold' : 'black',
             }}
           >

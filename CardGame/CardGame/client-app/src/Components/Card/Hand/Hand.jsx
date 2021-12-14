@@ -30,13 +30,14 @@ const Hand = (props) => {
   const grid = 8;
   const getItemStyle = (isDragging, draggableStyle) => ({
     userSelect: 'none',
-    padding: grid * 2,
+    //padding: grid * 2,
+    paddingRight: 32,
     ...draggableStyle,
   });
 
   const getListStyle = (isDraggingOver) => ({
     display: 'flex',
-    padding: grid,
+
     height: cardHeight,
   });
 
