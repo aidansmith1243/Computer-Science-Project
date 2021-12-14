@@ -47,7 +47,7 @@ const Hand = (props) => {
       style={{
         top: y + 'px',
         left: x + 'px',
-        width: cardWidth + dif * cards.length + 'px',
+        width: cardWidth + dif * (cards ? cards.length : 0) + 'px',
         height: cardHeight + 'px',
         position: 'absolute',
       }}
@@ -59,40 +59,44 @@ const Hand = (props) => {
             style={getListStyle(snapshot.isDraggingOver)}
             {...provided.droppableProps}
           >
-            {cards.map((k) => (
-              <Draggable
-                isDragDisabled={isDragDisabled}
-                key={
-                  k.suit
-                    ? `card-${k.suit} ${k.rank}`
-                    : `card-${cards.indexOf(k)}`
-                }
-                draggableId={
-                  k.suit
-                    ? `card-${k.suit} ${k.rank}`
-                    : `card-${cards.indexOf(k)}`
-                }
-                index={cards.indexOf(k)}
-              >
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    style={getItemStyle(
-                      snapshot.isDragging,
-                      provided.draggableProps.style
-                    )}
-                  >
-                    <Card
-                      position={{ x: 0, y: 0 }}
-                      suit={k.suit}
-                      rank={k.rank}
-                    />
-                  </div>
-                )}
-              </Draggable>
-            ))}
+            {cards ? (
+              cards.map((k) => (
+                <Draggable
+                  isDragDisabled={isDragDisabled}
+                  key={
+                    k.suit
+                      ? `card-${k.suit} ${k.rank}`
+                      : `card-${cards.indexOf(k)}`
+                  }
+                  draggableId={
+                    k.suit
+                      ? `card-${k.suit} ${k.rank}`
+                      : `card-${cards.indexOf(k)}`
+                  }
+                  index={cards.indexOf(k)}
+                >
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      style={getItemStyle(
+                        snapshot.isDragging,
+                        provided.draggableProps.style
+                      )}
+                    >
+                      <Card
+                        position={{ x: 0, y: 0 }}
+                        suit={k.suit ? k.suit : k.SUIT}
+                        rank={k.rank ? k.rank : k.RANK}
+                      />
+                    </div>
+                  )}
+                </Draggable>
+              ))
+            ) : (
+              <div />
+            )}
             {provided.placeholder}
           </div>
         )}

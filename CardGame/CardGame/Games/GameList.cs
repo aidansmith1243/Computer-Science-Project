@@ -26,6 +26,9 @@ namespace CardGame.Games
                 case "hearts":
                     createdGame = new Hearts(players) { Id = id };
                     break;
+                case "crazy eights":
+                    createdGame = new CrazyEights(players) { Id = id };
+                    break;
             }
             if(createdGame != null)
             {

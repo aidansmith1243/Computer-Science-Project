@@ -36,6 +36,7 @@ namespace CardGame.Hubs
             {
                 Clients.Group(p).SendAsync("GameStart", game, gameId);
             }
+            Console.WriteLine($"Creating Game: {game}");
             return Task.CompletedTask;
 
         }
