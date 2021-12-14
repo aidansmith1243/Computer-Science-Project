@@ -19,7 +19,9 @@ function App() {
             <div>
               <Route
                 path=''
-                element={<Main user={user} setGameId={setGameId} />}
+                element={
+                  <Main user={user} setGameId={setGameId} setUser={setUser} />
+                }
               />
               <Route path='/Hearts' element={<Hearts gameId={gameId} />} />
               <Route

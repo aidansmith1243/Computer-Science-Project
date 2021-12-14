@@ -9,6 +9,7 @@ const title_style = {
 
 const TopBar = (props) => {
   const user = props.user;
+  const logout = props.logout;
   const navigate = useNavigate();
   return (
     <Navbar style={title_style} fixed='top'>
@@ -19,7 +20,9 @@ const TopBar = (props) => {
         <Navbar.Toggle />
         <Navbar.Collapse className='justify-content-end'>
           {user ? (
-            <Navbar.Text className='text-dark'>Hello, {user}</Navbar.Text>
+            <Navbar.Text onClick={() => logout()} className='text-dark'>
+              Hello, {user}
+            </Navbar.Text>
           ) : (
             <div />
           )}

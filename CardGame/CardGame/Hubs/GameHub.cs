@@ -27,7 +27,7 @@ namespace CardGame.Hubs
         [NonAction]
         public User GetUser()
         {
-            return _cardGameRepository.GetUserById(Context.User.Identity.Name); ;
+            return _cardGameRepository.GetUserById(Context.User.Identity.Name);
         }
 
         public async Task<Task> JoinGame(string gameId)

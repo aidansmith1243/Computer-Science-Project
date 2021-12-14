@@ -8,7 +8,7 @@ import Notification from '../../Components/Notification/Notification';
 import LoadingModal from '../../Components/LoadingModal/LoadingModal';
 
 const Main = (props) => {
-  const { user, setGameId } = props;
+  const { user, setGameId, setUser } = props;
   const [showInvite, setShowInvite] = useState({ value: false, game: null });
   const [showLoading, setShowLoading] = useState({ value: false, user: null });
   const [friends, setFriends] = useState([]);
@@ -54,9 +54,22 @@ const Main = (props) => {
     })();
   }, []);
 
+  const logout = async () => {
+    await fetch('http://localhost:60230/auth/logout/', {
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': 'http://localhost:60230',
+      },
+      method: 'POST',
+      credentials: 'include',
+    });
+    setUser(undefined);
+    friendHub.stop();
+  };
+
   return (
     <div>
-      <TopBar user={user} />
+      <TopBar user={user} logout={logout} />
       <FriendList
         friendHub={friendHub}
         friends={friends}

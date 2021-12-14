@@ -82,5 +82,17 @@ namespace CardGame.Controllers
                 message = "success",
             });
         }
+        [HttpPost("logout")]
+        public IActionResult Post()
+        {
+            Console.WriteLine("POST: logout");
+
+            Response.Cookies.Delete("access_token");
+
+            return Ok(new
+            {
+                message = "success",
+            });
+        }
     }
 }
